@@ -1,0 +1,192 @@
+
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: smiliesEditor 0.6.1\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2012-03-27T15:56:09+00:00\n"
+"Last-Translator: Osku\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Smilies Editor"
+msgstr "Éditeur d'émoticônes"
+
+msgid "Toolbar"
+msgstr "Barre d'outils"
+
+msgid "Display smilies on toolbar"
+msgstr "Afficher les émoticônes sur la barre d'outils"
+
+msgid "Smilies"
+msgstr "Émoticônes"
+
+msgid "Configuration file is not writable."
+msgstr "Fichier de configuration non modifiable."
+
+msgid "Unable to write file %s. Please check your theme file and folders permissions."
+msgstr "Impossible d'écrire le fichier %s. Veuillez vérifier les permissions du fichier et répertoires de votre thème."
+
+msgid "Uploaded image is too big (height or width > 24px)."
+msgstr "L'image envoyée est trop grande (hauteur ou largeur > 24px)."
+
+msgid "This file %s is not an image. It would be difficult to use it for a smiley."
+msgstr "Ce fichier %s n'est pas une image. Ce sera difficile de l'utiliser pour un émoticône."
+
+msgid "Active theme does not have required subfolder <code>%s</code>."
+msgstr "Le thème actif ne contient pas le sous-répertoire obligatoire <code>%s</code>."
+
+msgid "Unable to create subfolder %s in your theme. Please check your folder permissions."
+msgstr "Impossible de créer le sous-répertoire %s dans votre thème. Veuillez vérifier les permissions du répertoire."
+
+msgid "Empty smilies zip file."
+msgstr "Fichier zip d'émoticônes vide."
+
+msgid "The zip file does not appear to be a valid Dotclear smilies package."
+msgstr "The fichier zip n'est pas un fichier d'émoticônes Dotclear valide."
+
+msgid "Definition"
+msgstr "Définition"
+
+msgid "update"
+msgstr "mettre à jour"
+
+msgid "delete"
+msgstr "supprimer"
+
+msgid "display"
+msgstr "afficher"
+
+msgid "hide"
+msgstr "cacher"
+
+msgid "Configuration successfully updated."
+msgstr "Configuration mise à jour avec succès."
+
+msgid "The subfolder has been successfully created"
+msgstr "Le sous-répertoire a été créé avec succès."
+
+msgid "Unused images have been successfully removed."
+msgstr "Les images non utilisées ont été supprimées avec succès."
+
+msgid "The image <em>%s</em> has been successfully uploaded."
+msgstr "L'image <em>%s</em> a été envoyée avec succès."
+
+msgid "A smilies zip package has been successfully installed."
+msgstr "Un fichier zip contenant des émoticônes a été installé avec succès."
+
+msgid "Smilies has been successfully removed."
+msgstr "Les émoticônes ont été supprimés avec succès."
+
+msgid "Smilies has been successfully updated."
+msgstr "Les émoticônes ont été mis à jour avec succès."
+
+msgid "Order of smilies has been successfully changed."
+msgstr "L'ordre des émoticônes a été mis à jour avec succès."
+
+msgid "These selected smilies are now hidden on toolbar."
+msgstr "Ces émoticônes sont désormais cachés dans la barre d'outils."
+
+msgid "These selected smilies are now displayed on toolbar"
+msgstr "Ces émoticônes sont désormais visibles dans la barre d'outils."
+
+msgid "A new smiley has been successfully created"
+msgstr "Un nouvel émoticône a été créé avec succès."
+
+msgid "Are you sure you want to remove these %s ?"
+msgstr "Êtes-vous certain que vous voulez supprimer ces %s ?"
+
+msgid "Your <a href=\"blog_theme.php\">current theme</a> on this blog is \"%s\"."
+msgstr "Le <a href=\"blog_theme.php\">thème utilisé</a> actuellement sur votre blog est \"%s\"."
+
+msgid "No defined smiley yet."
+msgstr "Aucun émoticône défini pour le moment."
+
+msgid "Configuration"
+msgstr "Configuration"
+
+msgid "Show toolbar smilies in comments form"
+msgstr "Afficher la barre d'outils des émoticônes dans le formulaire des commentaires"
+
+msgid "Show images on preview"
+msgstr "Afficher les images en prévisualisation"
+
+msgid "Comments form label:"
+msgstr "Libellé du formulaire des commentaires"
+
+msgid "Don't forget to <a href=\"%s\">display smilies</a> on your blog configuration."
+msgstr "N'oubliez pas d'<a href=\"%s\">afficher les émoticônes</a> dans la configuration de votre blog."
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Smilies set"
+msgstr "Jeu d'émoticônes"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Filename"
+msgstr "Nom du fichier"
+
+msgid "displayed"
+msgstr "visible"
+
+msgid "undisplayed"
+msgstr "caché"
+
+msgid "Selected smilies action:"
+msgstr "Action pour les émoticônes sélectionnés :"
+
+msgid "Ok"
+msgstr "Valider"
+
+msgid "Save order"
+msgstr "Enregistrer l'ordre"
+
+msgid "Initialize"
+msgstr "Initialiser"
+
+msgid "New smiley"
+msgstr "Nouvel émoticône"
+
+msgid "Required field"
+msgstr "Champ obligatoire"
+
+msgid "Image:"
+msgstr "Image :"
+
+msgid "Code:"
+msgstr "Code :"
+
+msgid "Create"
+msgstr "Créer"
+
+msgid "New image"
+msgstr "Nouvelle image"
+
+msgid "Choose a file:"
+msgstr "Choisissez un fichier :"
+
+msgid "Maximum size %s"
+msgstr "Taille maximale %s"
+
+msgid "Send"
+msgstr "Envoyer"
+
+msgid "Unused smilies"
+msgstr "Images non utilisées"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Download the smilies directory as a zip file"
+msgstr "Télécharger le répertoire des émoticônes dans un fichier zip"
+
+msgid "Smilies toolbar"
+msgstr "B"
+
