@@ -317,14 +317,18 @@ if (!empty($_GET['addsmile'])) {
 <html>
 <head>
 	<title><?php echo __('Smilies Editor'); ?></title>
-	<?php // echo dcPage::jsToolMan();?>
-	<?php echo dcPage::jsLoad('index.php?pf=smiliesEditor/js/_smilies.js'); ?>
+	<?php
+echo
+dcPage::jsLoad('js/jquery/jquery-ui.custom.js') .
+dcPage::jsLoad('js/jquery/jquery.ui.touch-punch.js') .
+dcPage::jsLoad('index.php?pf=smiliesEditor/js/_smilies.js');
+?>
 	
 	  <script type="text/javascript">
 	  <?php echo dcPage::jsVar('dotclear.smilies_base_url', dcCore::app()->blog->host . $o->smilies_base_url);?>
 	  dotclear.msg.confirm_image_delete = '<?php echo html::escapeJS(sprintf(__('Are you sure you want to remove these %s ?'), 'images')) ?>';
 	  $(function() {
-	    $('#del_form').submit(function() {
+	    $('#del_form').on('submit', function() {
 	      return window.confirm(dotclear.msg.confirm_image_delete);
 	    });
 	  });
@@ -430,7 +434,7 @@ if (empty($smilies)) {
         echo
         '<tr class="line ' . $line . '" id="l_' . ($k) . '">';
         if (dcCore::app()->auth->isSuperAdmin() && $theme != 'default') {
-            echo  '<td class="handle minimal">' . form::field(['order[' . $k . ']'], 2, 5, $k) . '</td>' ;
+            echo  '<td class="handle minimal">' . form::field(['order[' . $k . ']'], 2, 5, $k, 'position') . '</td>' ;
         }
         echo
         '<td class="minimal status">' . form::checkbox(['select[]'], $k) . '</td>' .
@@ -453,7 +457,7 @@ if (empty($smilies)) {
         '<input type="submit" value="' . __('Ok') . '" /></p>';
 
     if ((dcCore::app()->auth->isSuperAdmin() && $theme != 'default')) {
-        echo '<p><input type="submit" name="saveorder" 
+        echo '<p><input type="submit" name="saveorder" id="saveorder"
 		value="' . __('Save order') . '" 
 		/></p>';
     }
