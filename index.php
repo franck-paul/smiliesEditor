@@ -109,6 +109,8 @@ if (!empty($_POST['rm_unused_img'])) {
 }
 
 if (!empty($_FILES['upfile'])) {
+    $file = null;
+
     try {
         files::uploadStatus($_FILES['upfile']);
         $file = $o->uploadSmile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name']);
@@ -126,8 +128,8 @@ if (!empty($_FILES['upfile'])) {
 }
 
 // Create the combo of all images available in directory
+$smileys_combo = [];
 if (!empty($o->images_list)) {
-    $smileys_combo = [];
     foreach ($o->images_list as $k => $v) {
         $smileys_combo = array_merge($smileys_combo, [$v['name'] => $v['name']]);
     }

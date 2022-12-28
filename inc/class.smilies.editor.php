@@ -20,6 +20,7 @@ class smiliesEditor
     protected $smilies_file_name = 'smilies.txt';
 
     protected $smilies_desc_file ;
+
     public $smilies_base_url;
     public $smilies_path;
 
@@ -28,6 +29,8 @@ class smiliesEditor
 
     public $filemanager;
     public $files_list = [];
+
+    public $images_list = [];
 
     public function __construct()
     {
@@ -66,7 +69,7 @@ class smiliesEditor
                 throw new Exception(__('Configuration file is not writable.'));
             }
 
-            if (is_writable($this->smilies_desc_file) || (!file_exists($this->smilies_desc_file) && is_writable($this->smilies_path))) {
+            if (is_writable($this->smilies_desc_file) || !file_exists($this->smilies_desc_file)) {
                 try {
                     $fp = @fopen($this->smilies_desc_file, 'wb');
                     if (!$fp) {

@@ -25,8 +25,6 @@ dcCore::app()->addBehavior('publicEditEntryFormAfter', ['smiliesBehavior','publi
 
 if ($s->smilies_preview_flag) {
     dcCore::app()->addBehavior('publicBeforeCommentPreview', ['smiliesBehavior','publicBeforePreview']);
-    dcCore::app()->addBehavior('publicBeforePostPreview', ['smiliesBehavior','publicBeforePostPreview']);
-    dcCore::app()->addBehavior('publicBeforeMessagePreview', ['smiliesBehavior','publicBeforeMessagePreview']);
 }
 
 class smiliesBehavior
@@ -76,18 +74,5 @@ class smiliesBehavior
     {
         dcCore::app()->public->smilies                 = context::getSmilies(dcCore::app()->blog);
         dcCore::app()->ctx->comment_preview['content'] = context::addSmilies(dcCore::app()->ctx->comment_preview['content']);
-    }
-
-    public static function publicBeforePostPreview()
-    {
-        dcCore::app()->public->smilies              = context::getSmilies(dcCore::app()->blog);
-        dcCore::app()->ctx->post_preview['content'] = context::addSmilies(dcCore::app()->ctx->post_preview['content']);
-        dcCore::app()->ctx->post_preview['excerpt'] = context::addSmilies(dcCore::app()->ctx->post_preview['excerpt']);
-    }
-
-    public static function publicBeforeMessagePreview()
-    {
-        dcCore::app()->public->smilies                 = context::getSmilies(dcCore::app()->blog);
-        dcCore::app()->ctx->message_preview['content'] = context::addSmilies(dcCore::app()->ctx->message_preview['content']);
     }
 }
