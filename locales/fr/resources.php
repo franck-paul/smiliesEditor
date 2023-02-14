@@ -12,5 +12,5 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 if (!isset(dcCore::app()->resources['help']['smilieseditor'])) {
-    dcCore::app()->resources['help']['smilieseditor'] = dirname(__FILE__) . '/help.html';
+    dcCore::app()->resources['help']['smilieseditor'] = __DIR__ . '/help.html';
 }

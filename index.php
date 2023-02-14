@@ -20,7 +20,7 @@ $msg   = $warning = '';
 
 // Init
 $smg_writable = false;
-if (dcCore::app()->auth->isSuperAdmin() && $theme != 'default') {
+if (dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup') {
     $combo_action[__('Definition')] = [
         __('update') => 'update',
         __('delete') => 'clear',
@@ -169,7 +169,7 @@ if (!empty($_POST['actionsmilies']) && !empty($_POST['select'])) {
 
         case 'update':
             foreach ($_POST['select'] as $k => $v) {
-                $smilies[$v]['code'] = isset($_POST['code'][$v]) ? preg_replace('/[\s]+/', '', $_POST['code'][$v]) : $smilies[$v]['code'] ;
+                $smilies[$v]['code'] = isset($_POST['code'][$v]) ? preg_replace('/[\s]+/', '', (string) $_POST['code'][$v]) : $smilies[$v]['code'] ;
                 $smilies[$v]['name'] = $_POST['name'][$v] ?? $smilies[$v]['name'];
             }
 
@@ -239,8 +239,8 @@ if (!empty($_POST['saveorder']) && !empty($order)) {
 }
 
 if (!empty($_POST['smilecode']) && !empty($_POST['smilepic'])) {
-    $count                   = count($smilies);
-    $smilies[$count]['code'] = preg_replace('/[\s]+/', '', $_POST['smilecode']);
+    $count                   = is_countable($smilies) ? count($smilies) : 0;
+    $smilies[$count]['code'] = preg_replace('/[\s]+/', '', (string) $_POST['smilecode']);
     $smilies[$count]['name'] = $_POST['smilepic'];
 
     try {
@@ -410,7 +410,7 @@ if (empty($smilies)) {
                 '</div>' .
     '</form></div>';
 
-    $colspan = (dcCore::app()->auth->isSuperAdmin() && $theme != 'default') ? 3 : 2;
+    $colspan = (dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup') ? 3 : 2;
     echo
         '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="smilies-form">' .
         '<h3>' . __('Smilies set') . '</h3>' .
@@ -432,10 +432,10 @@ if (empty($smilies)) {
             $line   = 'offline';
             $status = '<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" src="images/check-wrn.png" />';
         }
-        $disabled = (dcCore::app()->auth->isSuperAdmin() && $theme != 'default') ? false : true;
+        $disabled = (dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup') ? false : true;
         echo
         '<tr class="line ' . $line . '" id="l_' . ($k) . '">';
-        if (dcCore::app()->auth->isSuperAdmin() && $theme != 'default') {
+        if (dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup') {
             echo  '<td class="handle minimal">' . form::field(['order[' . $k . ']'], 2, 5, $k, 'position') . '</td>' ;
         }
         echo
@@ -458,7 +458,7 @@ if (empty($smilies)) {
         dcCore::app()->formNonce() .
         '<input type="submit" value="' . __('Ok') . '" /></p>';
 
-    if ((dcCore::app()->auth->isSuperAdmin() && $theme != 'default')) {
+    if ((dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup')) {
         echo '<p><input type="submit" name="saveorder" id="saveorder"
 		value="' . __('Save order') . '" 
 		/></p>';
@@ -476,7 +476,7 @@ if (empty($images_all)) {
         '<input type="submit" name="create_dir" value="' . __('Initialize') . '" /></p></form></div>';
     }
 } else {
-    if (dcCore::app()->auth->isSuperAdmin() && $theme != 'default') {
+    if (dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup') {
         $val            = array_values($images_all);
         $preview_smiley = '<img class="smiley" src="' . dcCore::app()->blog->host . $val[0]['url'] . '" alt="' . $val[0]['name'] . '" title="' . $val[0]['name'] . '" id="smiley-preview" />';
 
@@ -501,7 +501,7 @@ if (empty($images_all)) {
     }
 }
 
-if ($smg_writable && dcCore::app()->auth->isSuperAdmin() && $theme != 'default') {
+if ($smg_writable && dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup') {
     echo
     '<div class="col"><form id="upl-smile-form" action="' . html::escapeURL(dcCore::app()->admin->getPageURL()) . '" method="post" enctype="multipart/form-data">' .
     '<h3>' . __('New image') . '</h3>' .
@@ -517,7 +517,7 @@ if ($smg_writable && dcCore::app()->auth->isSuperAdmin() && $theme != 'default')
     '</form></div>';
 }
 
-if (!empty($images_all) && dcCore::app()->auth->isSuperAdmin() && $theme != 'default') {
+if (!empty($images_all) && dcCore::app()->auth->isSuperAdmin() && $theme != 'Blowup') {
     if (!empty($o->images_list)) {
         echo '<div class="col"><form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="del_form">' .
         '<h3>' . __('Unused smilies') . '</h3>';
