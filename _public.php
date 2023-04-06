@@ -10,6 +10,9 @@
  * @copyright Osku and contributors
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+
+use Dotclear\Helper\Html\Html;
+
 $s = dcCore::app()->blog->settings->smilieseditor;
 
 dcCore::app()->addBehavior('publicFooterContent', ['smiliesBehavior','publicFooterContent']);
@@ -31,7 +34,7 @@ class smiliesBehavior
         $smilies_bar_flag = (bool) dcCore::app()->blog->settings->smilieseditor->smilies_bar_flag;
 
         if ($smilies_bar_flag && $use_smilies) {
-            $js = html::stripHostURL(dcCore::app()->blog->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
+            $js = Html::stripHostURL(dcCore::app()->blog->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
             echo "\n" . '<script type="text/javascript" src="' . $js . '"></script>' . "\n";
         } else {
             return;
@@ -50,14 +53,14 @@ class smiliesBehavior
 
         $sE      = new smiliesEditor();
         $smilies = $sE->getSmilies();
-        $field   = '<p class="field smilies"><label>' . html::escapeHTML($public_text) . '&nbsp;:</label><span>%s</span></p>';
+        $field   = '<p class="field smilies"><label>' . Html::escapeHTML($public_text) . '&nbsp;:</label><span>%s</span></p>';
 
         $res = '';
         foreach ($smilies as $smiley) {
             if ($smiley['onSmilebar']) {
                 $res .= ' <img class="smiley" src="' . $sE->smilies_base_url . $smiley['name'] . '" alt="' .
-                html::escapeHTML($smiley['code']) . '" title="' . html::escapeHTML($smiley['code']) . '" onclick="javascript:InsertSmiley(\'c_content\', \'' .
-                html::escapeHTML($smiley['code']) . ' \');" style="cursor:pointer;" />';
+                Html::escapeHTML($smiley['code']) . '" title="' . Html::escapeHTML($smiley['code']) . '" onclick="javascript:InsertSmiley(\'c_content\', \'' .
+                Html::escapeHTML($smiley['code']) . ' \');" style="cursor:pointer;" />';
             }
         }
 

@@ -10,6 +10,11 @@
  * @copyright Osku and contributors
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+
+use Dotclear\Helper\File\Files;
+use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\Network\Http;
+
 if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
@@ -54,7 +59,7 @@ if (!empty($_POST['create_dir'])) {
     }
 
     if (!dcCore::app()->error->flag()) {
-        http::redirect(dcCore::app()->admin->getPageURL() . '&creadir=1');
+        Http::redirect(dcCore::app()->admin->getPageURL() . '&creadir=1');
     }
 }
 
@@ -77,7 +82,7 @@ if (!empty($_POST['saveconfig'])) {
         $s->put('smilies_public_text', $formtext, 'string', 'Smilies displayed in toolbar');
 
         dcCore::app()->blog->triggerBlog();
-        http::redirect(dcCore::app()->admin->getPageURL() . '&config=1');
+        Http::redirect(dcCore::app()->admin->getPageURL() . '&config=1');
     } catch (Exception $e) {
         dcCore::app()->error->add($e->getMessage());
     }
@@ -104,7 +109,7 @@ if (!empty($_POST['rm_unused_img'])) {
     }
 
     if (!dcCore::app()->error->flag()) {
-        http::redirect(dcCore::app()->admin->getPageURL() . '&dircleaned=1');
+        Http::redirect(dcCore::app()->admin->getPageURL() . '&dircleaned=1');
     }
 }
 
@@ -112,7 +117,7 @@ if (!empty($_FILES['upfile'])) {
     $file = null;
 
     try {
-        files::uploadStatus($_FILES['upfile']);
+        Files::uploadStatus($_FILES['upfile']);
         $file = $o->uploadSmile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name']);
     } catch (Exception $e) {
         dcCore::app()->error->add($e->getMessage());
@@ -120,9 +125,9 @@ if (!empty($_FILES['upfile'])) {
 
     if (!dcCore::app()->error->flag()) {
         if ($file) {
-            http::redirect(dcCore::app()->admin->getPageURL() . '&upok=' . $file);
+            Http::redirect(dcCore::app()->admin->getPageURL() . '&upok=' . $file);
         } else {
-            http::redirect(dcCore::app()->admin->getPageURL() . '&upzipok=1');
+            Http::redirect(dcCore::app()->admin->getPageURL() . '&upzipok=1');
         }
     }
 }
@@ -162,7 +167,7 @@ if (!empty($_POST['actionsmilies']) && !empty($_POST['select'])) {
                 }
             }
             if (!dcCore::app()->error->flag()) {
-                http::redirect(dcCore::app()->admin->getPageURL() . '&remove=1');
+                Http::redirect(dcCore::app()->admin->getPageURL() . '&remove=1');
             }
 
             break;
@@ -181,7 +186,7 @@ if (!empty($_POST['actionsmilies']) && !empty($_POST['select'])) {
             }
 
             if (!dcCore::app()->error->flag()) {
-                http::redirect(dcCore::app()->admin->getPageURL() . '&update=1');
+                Http::redirect(dcCore::app()->admin->getPageURL() . '&update=1');
             }
 
             break;
@@ -198,7 +203,7 @@ if (!empty($_POST['actionsmilies']) && !empty($_POST['select'])) {
             }
 
             if (!dcCore::app()->error->flag()) {
-                http::redirect(dcCore::app()->admin->getPageURL() . '&display=1');
+                Http::redirect(dcCore::app()->admin->getPageURL() . '&display=1');
             }
 
             break;
@@ -215,7 +220,7 @@ if (!empty($_POST['actionsmilies']) && !empty($_POST['select'])) {
             }
 
             if (!dcCore::app()->error->flag()) {
-                http::redirect(dcCore::app()->admin->getPageURL() . '&hide=1');
+                Http::redirect(dcCore::app()->admin->getPageURL() . '&hide=1');
             }
 
             break;
@@ -234,7 +239,7 @@ if (!empty($_POST['saveorder']) && !empty($order)) {
     }
 
     if (!dcCore::app()->error->flag()) {
-        http::redirect(dcCore::app()->admin->getPageURL() . '&neworder=1');
+        Http::redirect(dcCore::app()->admin->getPageURL() . '&neworder=1');
     }
 }
 
@@ -250,7 +255,7 @@ if (!empty($_POST['smilecode']) && !empty($_POST['smilepic'])) {
     }
 
     if (!dcCore::app()->error->flag()) {
-        http::redirect(dcCore::app()->admin->getPageURL() . '&addsmile=1');
+        Http::redirect(dcCore::app()->admin->getPageURL() . '&addsmile=1');
     }
 }
 
@@ -260,7 +265,6 @@ if (!empty($_GET['zipdl'])) {
         @set_time_limit(300);
         $fp  = fopen('php://output', 'wb');
         $zip = new fileZip($fp);
-        //$zip->addExclusion('#(^|/).(.*?)_(m|s|sq|t).jpg$#');
         $zip->addDirectory(dcCore::app()->themes->moduleInfo($theme, 'root') . '/smilies', '', true);
         header('Content-Disposition: attachment;filename=smilies-' . $theme . '.zip');
         header('Content-Type: application/x-zip');
@@ -328,7 +332,7 @@ dcPage::jsLoad('index.php?pf=smiliesEditor/js/_smilies.js');
 	
 	  <script type="text/javascript">
 	  <?php echo dcPage::jsVar('dotclear.smilies_base_url', dcCore::app()->blog->host . $o->smilies_base_url);?>
-	  dotclear.msg.confirm_image_delete = '<?php echo html::escapeJS(sprintf(__('Are you sure you want to remove these %s ?'), 'images')) ?>';
+	  dotclear.msg.confirm_image_delete = '<?php echo Html::escapeJS(sprintf(__('Are you sure you want to remove these %s ?'), 'images')) ?>';
 	  $(function() {
 	    $('#del_form').on('submit', function() {
 	      return window.confirm(dotclear.msg.confirm_image_delete);
@@ -367,10 +371,10 @@ if ($msg) {
 }
 
 echo
-'<h2>' . html::escapeHTML(dcCore::app()->blog->name) . ' &rsaquo; <span class="page-title">' . __('Smilies Editor') . '</span></h2>';
+'<h2>' . Html::escapeHTML(dcCore::app()->blog->name) . ' &rsaquo; <span class="page-title">' . __('Smilies Editor') . '</span></h2>';
 
 echo
-'<p>' . sprintf(__('Your <a href="blog_theme.php">current theme</a> on this blog is "%s".'), '<strong>' . html::escapeHTML($T['name']) . '</strong>') . '</p>';
+'<p>' . sprintf(__('Your <a href="blog_theme.php">current theme</a> on this blog is "%s".'), '<strong>' . Html::escapeHTML($T['name']) . '</strong>') . '</p>';
 
 if ($warning) {
     echo $warning;
@@ -397,10 +401,10 @@ if (empty($smilies)) {
 
                     '<p class="clear">' .
                         '<label class="required classic" for="smilies_preview_flag">' . __('Comments form label:') . '</label>&nbsp;&nbsp;' .
-                        form::field('smilies_public_text', 50, 255, html::escapeHTML($smilies_public_text)) .
+                        form::field('smilies_public_text', 50, 255, Html::escapeHTML($smilies_public_text)) .
                     '</p>' .
                     '<br /><p class="clear form-note">' .
-                        sprintf(__('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'), 'blog_pref.php') .
+                        sprintf(__('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'), 'blog_pref.php#params.use_smilies') .
                     '</p>' .
                     '<p class="clear">' .
                         form::hidden(['p'], 'smiliesEditor') .
@@ -440,7 +444,7 @@ if (empty($smilies)) {
         }
         echo
         '<td class="minimal status">' . form::checkbox(['select[]'], $k) . '</td>' .
-        '<td class="minimal">' . form::field(['code[]','c' . $k], 20, 255, html::escapeHTML($v['code']), '', '', $disabled) . '</td>' .
+        '<td class="minimal">' . form::field(['code[]','c' . $k], 20, 255, Html::escapeHTML($v['code']), '', '', $disabled) . '</td>' .
         //'<noscript><td class="minimal smiley"><img src="'.dcCore::app()->blog->host.$o->smilies_base_url.$v['name'].'" alt="'.$v['code'].'" /></td></noscript>'.
         '<td class="nowrap status">' . form::combo(['name[]','n' . $k], $smileys_combo, $v['name'], 'emote', '', $disabled) . $status . '</td>' .
         '</tr>';
@@ -503,12 +507,12 @@ if (empty($images_all)) {
 
 if ($smg_writable && dcCore::app()->auth->isSuperAdmin() && $theme != 'blowup') {
     echo
-    '<div class="col"><form id="upl-smile-form" action="' . html::escapeURL(dcCore::app()->admin->getPageURL()) . '" method="post" enctype="multipart/form-data">' .
+    '<div class="col"><form id="upl-smile-form" action="' . Html::escapeURL(dcCore::app()->admin->getPageURL()) . '" method="post" enctype="multipart/form-data">' .
     '<h3>' . __('New image') . '</h3>' .
     '<p>' . form::hidden(['MAX_FILE_SIZE'], DC_MAX_UPLOAD_SIZE) .
     dcCore::app()->formNonce() .
     '<label>' . __('Choose a file:') .
-    ' (' . sprintf(__('Maximum size %s'), files::size(DC_MAX_UPLOAD_SIZE)) . ')' .
+    ' (' . sprintf(__('Maximum size %s'), Files::size(DC_MAX_UPLOAD_SIZE)) . ')' .
     '<input type="file" name="upfile" size="20" />' .
     '</label></p>' .
     '<p><input type="submit" value="' . __('Send') . '" />' .
@@ -540,7 +544,7 @@ if (!empty($images_all) && dcCore::app()->auth->isSuperAdmin() && $theme != 'blo
 echo '</div>';
 
 if (!empty($images_all)) {
-    echo  '<p class="zip-dl clear"><a href="' . html::escapeURL(dcCore::app()->admin->getPageURL()) . '&amp;zipdl=1">' .
+    echo  '<p class="zip-dl clear"><a href="' . Html::escapeURL(dcCore::app()->admin->getPageURL()) . '&amp;zipdl=1">' .
         __('Download the smilies directory as a zip file') . '</a></p>';
 }
 dcPage::helpBlock('smilieseditor');

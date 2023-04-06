@@ -10,6 +10,9 @@
  * @copyright Osku and contributors
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+
+use Dotclear\Helper\Html\Html;
+
 if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
@@ -72,13 +75,13 @@ class smiliesEditorAdminBehaviors
         $smilies = $sE->getSmilies();
         foreach ($smilies as $id => $smiley) {
             if ($smiley['onSmilebar']) {
-                $res .= 'jsToolBar.prototype.elements.smilieseditor_s' . $id . " = {type: 'button', title: '" . html::escapeJS($smiley['code']) . "', fn:{} }; " .
+                $res .= 'jsToolBar.prototype.elements.smilieseditor_s' . $id . " = {type: 'button', title: '" . Html::escapeJS($smiley['code']) . "', fn:{} }; " .
                     //"jsToolBar.prototype.elements.smilieseditor_s".$id.".context = 'post'; ".
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".icon = '" . html::escapeJS(dcCore::app()->blog->host . $sE->smilies_base_url . $smiley['name']) . "'; " .
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wiki = function() { this.encloseSelection('" . html::escapeJS($smiley['code']) . "  ',''); }; " .
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.xhtml = function() { this.encloseSelection('" . html::escapeJS($smiley['code']) . "  ',''); }; " .
+                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".icon = '" . Html::escapeJS(dcCore::app()->blog->host . $sE->smilies_base_url . $smiley['name']) . "'; " .
+                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wiki = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
+                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.xhtml = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
                     'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wysiwyg = function() {
-						smiley = document.createTextNode('" . html::escapeJS($smiley['code']) . " ');
+						smiley = document.createTextNode('" . Html::escapeJS($smiley['code']) . " ');
 						this.insertNode(smiley);
 					};\n";
             }

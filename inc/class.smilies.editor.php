@@ -10,6 +10,10 @@
  * @copyright Osku and contributors
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+
+use Dotclear\Helper\File\Files;
+use Dotclear\Helper\File\Path;
+
 if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
@@ -114,11 +118,11 @@ class smiliesEditor
 
     public function uploadSmile($tmp, $name)
     {
-        $name = files::tidyFileName($name);
+        $name = Files::tidyFileName($name);
 
         $file = $this->filemanager->uploadFile($tmp, $name);
 
-        $type = files::getMimeType($name);
+        $type = Files::getMimeType($name);
 
         if (($type == 'image/jpeg' || $type == 'image/png')) {
             $s = getimagesize($file);
@@ -166,7 +170,7 @@ class smiliesEditor
     public function createDir()
     {
         try {
-            files::makeDir(dcCore::app()->blog->themes_path . '/' . dcCore::app()->blog->settings->system->theme . '/' . path::clean($this->smilies_dir));
+            Files::makeDir(dcCore::app()->blog->themes_path . '/' . dcCore::app()->blog->settings->system->theme . '/' . Path::clean($this->smilies_dir));
         } catch (Exception $e) {
             throw new Exception(sprintf(__('Unable to create subfolder %s in your theme. Please check your folder permissions.'), $this->smilies_dir));
         }
