@@ -12,7 +12,7 @@
 use Dotclear\Helper\L10n;
 
 L10n::$locales['Smilies Editor'] = 'Éditeur d\'émoticônes';
-L10n::$locales['smiliesEditor'] = 'Éditeur d\'émoticônes';
+L10n::$locales['smiliesEditor'] = 'smiliesEditor';
 L10n::$locales['Toolbar'] = 'Barre d\'outils';
 L10n::$locales['Display smilies on toolbar'] = 'Afficher les émoticônes sur la barre d\'outils';
 L10n::$locales['Configuration file is not writable.'] = 'Fichier de configuration non modifiable.';
