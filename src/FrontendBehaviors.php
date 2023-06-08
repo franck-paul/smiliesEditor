@@ -5,33 +5,27 @@
  * @package Dotclear
  * @subpackage Plugins
  *
- * @author Osku and contributors
+ * @author Franck Paul and contributors
  *
- * @copyright Osku and contributors
+ * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+declare(strict_types=1);
 
+namespace Dotclear\Plugin\smiliesEditor;
+
+use context;
+use dcCore;
 use Dotclear\Helper\Html\Html;
 
-$s = dcCore::app()->blog->settings->smilieseditor;
-
-dcCore::app()->addBehavior('publicFooterContent', ['smiliesBehavior','publicFooterContent']);
-dcCore::app()->addBehavior('publicCommentFormAfterContent', ['smiliesBehavior','publicFormAfterContent']);
-dcCore::app()->addBehavior('publicAnswerFormAfterContent', ['smiliesBehavior','publicFormAfterContent']);
-dcCore::app()->addBehavior('publicEditFormAfter', ['smiliesBehavior','publicFormAfterContent']);
-dcCore::app()->addBehavior('publicEntryFormAfter', ['smiliesBehavior','publicFormAfterContent']);
-dcCore::app()->addBehavior('publicEditEntryFormAfter', ['smiliesBehavior','publicFormAfterContent']);
-
-if ($s->smilies_preview_flag) {
-    dcCore::app()->addBehavior('publicBeforeCommentPreview', ['smiliesBehavior','publicBeforePreview']);
-}
-
-class smiliesBehavior
+class FrontendBehaviors
 {
     public static function publicFooterContent()
     {
+        $settings = dcCore::app()->blog->settings->get(My::id());
+
         $use_smilies      = (bool) dcCore::app()->blog->settings->system->use_smilies;
-        $smilies_bar_flag = (bool) dcCore::app()->blog->settings->smilieseditor->smilies_bar_flag;
+        $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
 
         if ($smilies_bar_flag && $use_smilies) {
             $js = Html::stripHostURL(dcCore::app()->blog->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
@@ -43,15 +37,17 @@ class smiliesBehavior
 
     public static function publicFormAfterContent()
     {
+        $settings = dcCore::app()->blog->settings->get(My::id());
+
         $use_smilies      = (bool) dcCore::app()->blog->settings->system->use_smilies;
-        $smilies_bar_flag = (bool) dcCore::app()->blog->settings->smilieseditor->smilies_bar_flag;
-        $public_text      = dcCore::app()->blog->settings->smilieseditor->smilies_public_text;
+        $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
+        $public_text      = $settings->smilies_public_text;
 
         if (!$smilies_bar_flag || !$use_smilies) {
             return;
         }
 
-        $sE      = new smiliesEditor();
+        $sE      = new CoreHelper();
         $smilies = $sE->getSmilies();
         $field   = '<p class="field smilies"><label>' . Html::escapeHTML($public_text) . '&nbsp;:</label><span>%s</span></p>';
 

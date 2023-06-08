@@ -5,47 +5,27 @@
  * @package Dotclear
  * @subpackage Plugins
  *
- * @author Osku and contributors
+ * @author Franck Paul and contributors
  *
- * @copyright Osku and contributors
+ * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+declare(strict_types=1);
 
+namespace Dotclear\Plugin\smiliesEditor;
+
+use dcCore;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Html;
+use form;
 
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
-
-dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
-    __('Smilies Editor'),
-    'plugin.php?p=smiliesEditor',
-    'index.php?pf=smiliesEditor/icon.png',
-    preg_match('/plugin.php\?p=smiliesEditor(&.*)?$/', $_SERVER['REQUEST_URI']),
-    dcCore::app()->auth->check(dcCore::app()->auth->makePermissions([
-        dcAuth::PERMISSION_ADMIN,
-    ]), dcCore::app()->blog->id)
-);
-
-dcCore::app()->addBehavior('adminPreferencesForm', ['smiliesEditorAdminBehaviors','adminUserForm']);
-dcCore::app()->addBehavior('adminUserForm', ['smiliesEditorAdminBehaviors','adminUserForm']);
-dcCore::app()->addBehavior('adminBeforeUserCreate', ['smiliesEditorAdminBehaviors','setSmiliesDisplay']);
-dcCore::app()->addBehavior('adminBeforeUserUpdate', ['smiliesEditorAdminBehaviors','setSmiliesDisplay']);
-
-if (dcCore::app()->auth->getOption('smilies_editor_admin')) {
-    dcCore::app()->addBehavior('adminPostHeaders', ['smiliesEditorAdminBehaviors','adminPostHeaders']);
-    dcCore::app()->addBehavior('adminPageHeaders', ['smiliesEditorAdminBehaviors','adminPostHeaders']);
-    dcCore::app()->addBehavior('adminRelatedHeaders', ['smiliesEditorAdminBehaviors','adminPostHeaders']);
-    dcCore::app()->addBehavior('adminDashboardHeaders', ['smiliesEditorAdminBehaviors','adminPostHeaders']);
-}
-
-class smiliesEditorAdminBehaviors
+class BackendBehaviors
 {
     public static function adminUserForm($args)
     {
         if ($args instanceof dcCore) {
             $opts = $args->auth->getOptions();
-        } elseif ($args instanceof record) {
+        } elseif ($args instanceof MetaRecord) {
             $opts = $args->options();
         } else {
             $opts = [];
@@ -71,7 +51,7 @@ class smiliesEditorAdminBehaviors
     {
         $res = '<script type="text/javascript">' . "\n";
 
-        $sE      = new smiliesEditor();
+        $sE      = new CoreHelper();
         $smilies = $sE->getSmilies();
         foreach ($smilies as $id => $smiley) {
             if ($smiley['onSmilebar']) {

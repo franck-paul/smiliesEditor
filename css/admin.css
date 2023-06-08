@@ -1,0 +1,31 @@
+option[selected='selected'] {
+  color: #c00;
+}
+select {
+  background-color: #fff !important;
+}
+a.add {
+  background: inherit url(images/plus.png) top left;
+}
+img.smiley {
+  vertical-align: middle;
+}
+/*tr.offline {background-color : #f4f4ef;}*/
+tr td.smiley {
+  text-align: center;
+}
+#smilepic,
+#smilepic option,
+select.emote,
+select.emote option {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 4% 50%;
+  background-size: 24px;
+  padding: 1px 1px 1px 30px;
+  color: #444;
+  height: 26px;
+}
+option[selected='selected'] {
+  background-color: #e2dfca !important;
+}

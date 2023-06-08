@@ -14,7 +14,7 @@ $this->registerModule(
     'smiliesEditor',
     'Smilies Editor',
     'Osku and contributors',
-    '1.3.1',
+    '2.0',
     [
         'requires'    => [['core', '2.26']],
         'permissions' => dcCore::app()->auth->makePermissions([

@@ -5,20 +5,23 @@
  * @package Dotclear
  * @subpackage Plugins
  *
- * @author Osku and contributors
+ * @author Franck Paul and contributors
  *
- * @copyright Osku and contributors
+ * @copyright Franck Paul carnet.franck.paul@gmail.com
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+declare(strict_types=1);
 
+namespace Dotclear\Plugin\smiliesEditor;
+
+use dcCore;
 use Dotclear\Helper\File\Files;
+use Dotclear\Helper\File\Manager;
 use Dotclear\Helper\File\Path;
+use Dotclear\Helper\File\Zip\Unzip;
+use Exception;
 
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
-
-class smiliesEditor
+class CoreHelper
 {
     protected $smilies_dir       = 'smilies';
     protected $smilies_file_name = 'smilies.txt';
@@ -44,7 +47,7 @@ class smiliesEditor
         $this->smilies_desc_file = dcCore::app()->blog->themes_path . '/' . $sys->theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
         $this->smilies_base_url  = $sys->themes_url . '/' . $sys->theme . '/' . $this->smilies_dir . '/';
         $this->smilies_path      = dcCore::app()->blog->themes_path . '/' . $sys->theme . '/' . $this->smilies_dir;
-        $this->smilies_config    = unserialize($smi->smilies_toolbar);
+        $this->smilies_config    = unserialize((string) $smi->smilies_toolbar);
     }
 
     public function getSmilies()
@@ -153,7 +156,7 @@ class smiliesEditor
     public function getFiles()
     {
         try {
-            $this->filemanager = new filemanager($this->smilies_path, $this->smilies_base_url);
+            $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
             $this->filemanager->getDir();
             foreach ($this->filemanager->dir['files'] as $k => $v) {
                 $this->files_list[$v->basename] = [$v->basename => 'name',  $v->file_url => 'url', $v->type => 'type'];
@@ -178,14 +181,13 @@ class smiliesEditor
 
     public function loadAllSmilies($zip_file)
     {
-        $zip = new fileUnzip($zip_file);
+        $zip = new Unzip($zip_file);
         $zip->getList(false, '#(^|/)(__MACOSX|\.directory|\.svn|\.DS_Store|Thumbs\.db)(/|$)#');
 
         $zip_root_dir = $zip->getRootDir();
 
-        $define      = '';
-        $target      = dirname($zip_file);
-        $destination = $target;
+        $define = '';
+        $target = dirname($zip_file);
         if ($zip_root_dir != false) {
             $define     = $zip_root_dir . '/' . $this->smilies_file_name;
             $has_define = $zip->hasFile($define);

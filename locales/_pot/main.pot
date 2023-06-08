@@ -1,0 +1,251 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Dotclear 2 smiliesEditor module\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-08 23:21+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../git-plugins/smiliesEditor/src/Backend.php:28
+#: ../git-plugins/smiliesEditor/src/Backend.php:40
+#: ../git-plugins/smiliesEditor/src/Manage.php:338
+#: ../git-plugins/smiliesEditor/src/Manage.php:343
+msgid "Smilies Editor"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Backend.php:28
+msgid "smiliesEditor"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/BackendBehaviors.php:37
+#: ../git-plugins/smiliesEditor/src/Manage.php:280
+msgid "Toolbar"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/BackendBehaviors.php:39
+msgid "Display smilies on toolbar"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:76
+msgid "Configuration file is not writable."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:93
+#, php-format
+msgid "Unable to write file %s. Please check your theme file and folders permissions."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:135
+msgid "Uploaded image is too big (height or width > 24px)."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:153
+#, php-format
+msgid "This file %s is not an image. It would be difficult to use it for a smiley."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:169
+#, php-format
+msgid "Active theme does not have required subfolder <code>%s</code>."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:178
+#, php-format
+msgid "Unable to create subfolder %s in your theme. Please check your folder permissions."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:202
+msgid "Empty smilies zip file."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/CoreHelper.php:209
+msgid "The zip file does not appear to be a valid Dotclear smilies package."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Install.php:53
+#: ../git-plugins/smiliesEditor/src/Manage.php:72
+msgid "Smilies"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:62
+msgid "The subfolder has been successfully created"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:107
+msgid "Unused images have been successfully removed."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:120
+#, php-format
+msgid "The image <em>%s</em> has been successfully uploaded."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:123
+msgid "A smilies zip package has been successfully installed."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:147
+msgid "Order of smilies has been successfully changed."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:167
+msgid "Smilies has been successfully removed."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:184
+msgid "Smilies has been successfully updated."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:199
+msgid "These selected smilies are now displayed on toolbar"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:214
+msgid "These selected smilies are now hidden on toolbar."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:231
+msgid "A new smiley has been successfully created"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:274
+msgid "Definition"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:275
+msgid "update"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:276
+msgid "delete"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:281
+msgid "display"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:282
+msgid "hide"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:333
+#, php-format
+msgid "Are you sure you want to remove these %s ?"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:350
+#, php-format
+msgid "Your <a href=\"blog_theme.php\">current theme</a> on this blog is \"%s\"."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:354
+msgid "No defined smiley yet."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:360
+msgid "Configuration"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:364
+msgid "Show toolbar smilies in comments form"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:368
+msgid "Show images on preview"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:372
+msgid "Comments form label:"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:376
+#, php-format
+msgid "Don't forget to <a href=\"%s\">display smilies</a> on your blog configuration."
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:381
+msgid "Save"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:389
+msgid "Smilies set"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:394
+msgid "Image"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:403
+msgid "displayed"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:406
+msgid "undisplayed"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:427
+msgid "Selected smilies action:"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:432
+msgid "Ok"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:436
+msgid "Save order"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:449
+msgid "Initialize"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:459
+msgid "New smiley"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:462
+msgid "Image:"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:467
+msgid "Code:"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:472
+msgid "Create"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:480
+msgid "New image"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:483
+msgid "Choose a file:"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:484
+#, php-format
+msgid "Maximum size %s"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:496
+msgid "Unused smilies"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:508
+msgid "Delete"
+msgstr ""
+
+#: ../git-plugins/smiliesEditor/src/Manage.php:517
+msgid "Download the smilies directory as a zip file"
+msgstr ""

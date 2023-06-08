@@ -1,4 +1,8 @@
 $(() => {
+  const smilies = dotclear.getData('smilies');
+  dotclear.smilies_base_url = smilies.smilies_base_url;
+  dotclear.msg.confirm_image_delete = smilies.confirm_image_delete;
+
   $('.checkboxes-helpers').each(function () {
     dotclear.checkboxesHelpers(this);
   });
@@ -42,4 +46,6 @@ $(() => {
   });
   $('#smilies-list tr td input.position').hide();
   $('#smilies-list tr td.handle').addClass('handler');
+
+  $('#del_form').on('submit', () => window.confirm(dotclear.msg.confirm_image_delete));
 });
