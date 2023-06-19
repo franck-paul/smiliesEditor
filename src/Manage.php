@@ -347,7 +347,7 @@ class Manage extends dcNsProcess
 
         // Form
         echo
-        '<p>' . sprintf(__('Your <a href="blog_theme.php">current theme</a> on this blog is "%s".'), '<strong>' . Html::escapeHTML($theme_define->get('name')) . '</strong>') . '</p>';
+        '<p>' . sprintf(__('Your <a href="%s">current theme</a> on this blog is "%s".'), dcCore::app()->adminurl->get('admin.blog.theme'), '<strong>' . Html::escapeHTML($theme_define->get('name')) . '</strong>') . '</p>';
 
         if (empty($smilies)) {
             if (!empty($smilies_editor->filemanager)) {
@@ -356,7 +356,7 @@ class Manage extends dcNsProcess
         } else {
             echo
             '<div class="clear" id="smilies_options">' .
-            '<form action="plugin.php" method="post" id="form_smilies_options">' .
+            '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="form_smilies_options">' .
                     '<h3>' . __('Configuration') . '</h3>' .
                         '<div class="two-cols">' .
                             '<p class="col">' .
@@ -373,10 +373,12 @@ class Manage extends dcNsProcess
                                 form::field('smilies_public_text', 50, 255, Html::escapeHTML($smilies_public_text)) .
                             '</p>' .
                             '<br /><p class="clear form-note">' .
-                                sprintf(__('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'), 'blog_pref.php#params.use_smilies') .
+                                sprintf(
+                                    __('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'),
+                                    dcCore::app()->adminurl->get('admin.blog.pref') . '#params.use_smilies'
+                                ) .
                             '</p>' .
                             '<p class="clear">' .
-                                form::hidden(['p'], 'smiliesEditor') .
                                 dcCore::app()->formNonce() .
                                 '<input type="submit" name="saveconfig" value="' . __('Save') . '" />' .
                             '</p>' .

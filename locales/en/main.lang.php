@@ -40,7 +40,7 @@ L10n::$locales['delete'] = '';
 L10n::$locales['display'] = '';
 L10n::$locales['hide'] = '';
 L10n::$locales['Are you sure you want to remove these %s ?'] = '';
-L10n::$locales['Your <a href="blog_theme.php">current theme</a> on this blog is "%s".'] = '';
+L10n::$locales['Your <a href="%s">current theme</a> on this blog is "%s".'] = '';
 L10n::$locales['No defined smiley yet.'] = '';
 L10n::$locales['Configuration'] = '';
 L10n::$locales['Show toolbar smilies in comments form'] = '';

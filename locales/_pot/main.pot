@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Dotclear 2 smiliesEditor module\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-08 23:21+0200\n"
+"POT-Creation-Date: 2023-06-19 18:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -145,7 +145,7 @@ msgstr ""
 
 #: ../git-plugins/smiliesEditor/src/Manage.php:350
 #, php-format
-msgid "Your <a href=\"blog_theme.php\">current theme</a> on this blog is \"%s\"."
+msgid "Your <a href=\"%s\">current theme</a> on this blog is \"%s\"."
 msgstr ""
 
 #: ../git-plugins/smiliesEditor/src/Manage.php:354
@@ -168,84 +168,84 @@ msgstr ""
 msgid "Comments form label:"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:376
+#: ../git-plugins/smiliesEditor/src/Manage.php:377
 #, php-format
 msgid "Don't forget to <a href=\"%s\">display smilies</a> on your blog configuration."
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:381
+#: ../git-plugins/smiliesEditor/src/Manage.php:383
 msgid "Save"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:389
+#: ../git-plugins/smiliesEditor/src/Manage.php:391
 msgid "Smilies set"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:394
+#: ../git-plugins/smiliesEditor/src/Manage.php:396
 msgid "Image"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:403
+#: ../git-plugins/smiliesEditor/src/Manage.php:405
 msgid "displayed"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:406
+#: ../git-plugins/smiliesEditor/src/Manage.php:408
 msgid "undisplayed"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:427
+#: ../git-plugins/smiliesEditor/src/Manage.php:429
 msgid "Selected smilies action:"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:432
+#: ../git-plugins/smiliesEditor/src/Manage.php:434
 msgid "Ok"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:436
+#: ../git-plugins/smiliesEditor/src/Manage.php:438
 msgid "Save order"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:449
+#: ../git-plugins/smiliesEditor/src/Manage.php:451
 msgid "Initialize"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:459
+#: ../git-plugins/smiliesEditor/src/Manage.php:461
 msgid "New smiley"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:462
+#: ../git-plugins/smiliesEditor/src/Manage.php:464
 msgid "Image:"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:467
+#: ../git-plugins/smiliesEditor/src/Manage.php:469
 msgid "Code:"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:472
+#: ../git-plugins/smiliesEditor/src/Manage.php:474
 msgid "Create"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:480
+#: ../git-plugins/smiliesEditor/src/Manage.php:482
 msgid "New image"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:483
+#: ../git-plugins/smiliesEditor/src/Manage.php:485
 msgid "Choose a file:"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:484
+#: ../git-plugins/smiliesEditor/src/Manage.php:486
 #, php-format
 msgid "Maximum size %s"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:496
+#: ../git-plugins/smiliesEditor/src/Manage.php:498
 msgid "Unused smilies"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:508
+#: ../git-plugins/smiliesEditor/src/Manage.php:510
 msgid "Delete"
 msgstr ""
 
-#: ../git-plugins/smiliesEditor/src/Manage.php:517
+#: ../git-plugins/smiliesEditor/src/Manage.php:519
 msgid "Download the smilies directory as a zip file"
 msgstr ""

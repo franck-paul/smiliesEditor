@@ -40,7 +40,7 @@ L10n::$locales['delete'] = 'supprimer';
 L10n::$locales['display'] = 'afficher';
 L10n::$locales['hide'] = 'cacher';
 L10n::$locales['Are you sure you want to remove these %s ?'] = 'Êtes-vous certain que vous voulez supprimer ces %s ?';
-L10n::$locales['Your <a href="blog_theme.php">current theme</a> on this blog is "%s".'] = 'Le <a href="blog_theme.php">thème utilisé</a> actuellement sur votre blog est "%s".';
+L10n::$locales['Your <a href="%s">current theme</a> on this blog is "%s".'] = 'Le <a href="%s">thème utilisé</a> actuellement sur votre blog est "%s".';
 L10n::$locales['No defined smiley yet.'] = 'Aucun émoticône défini pour le moment.';
 L10n::$locales['Configuration'] = 'Configuration';
 L10n::$locales['Show toolbar smilies in comments form'] = 'Afficher la barre d\'outils des émoticônes dans le formulaire des commentaires';
