@@ -22,7 +22,6 @@ use dcThemes;
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\File\Zip\Zip;
 use Dotclear\Helper\Html\Html;
-use Dotclear\Helper\Network\Http;
 use Exception;
 use form;
 
@@ -58,7 +57,7 @@ class Manage extends dcNsProcess
         if (!empty($_POST['create_dir'])) {
             try {
                 $smilies_editor->createDir();
-                Http::redirect(dcCore::app()->admin->getPageURL());
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 dcPage::addSuccessNotice(__('The subfolder has been successfully created'));
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -77,7 +76,7 @@ class Manage extends dcNsProcess
 
                 dcCore::app()->blog->triggerBlog();
                 dcPage::addSuccessNotice(__('Configuration successfully updated.'));
-                Http::redirect(dcCore::app()->admin->getPageURL());
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -105,7 +104,9 @@ class Manage extends dcNsProcess
                 }
 
                 dcPage::addSuccessNotice(__('Unused images have been successfully removed.'));
-                Http::redirect(dcCore::app()->admin->getPageURL() . '&dircleaned=1');
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), [
+                    'dircleaned' => 1,
+                ]);
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -118,10 +119,10 @@ class Manage extends dcNsProcess
                 $file = $smilies_editor->uploadSmile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name']);
                 if ($file) {
                     dcPage::addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), $_GET['upok']));
-                    Http::redirect(dcCore::app()->admin->getPageURL());
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 } else {
                     dcPage::addSuccessNotice(__('A smilies zip package has been successfully installed.'));
-                    Http::redirect(dcCore::app()->admin->getPageURL());
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -145,7 +146,7 @@ class Manage extends dcNsProcess
                     }
                     $smilies_editor->setSmilies($new_smilies);
                     dcPage::addSuccessNotice(__('Order of smilies has been successfully changed.'));
-                    Http::redirect(dcCore::app()->admin->getPageURL());
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -165,7 +166,7 @@ class Manage extends dcNsProcess
                         $smilies_editor->setSmilies($smilies);
                         $smilies_editor->setConfig($smilies);
                         dcPage::addSuccessNotice(__('Smilies has been successfully removed.'));
-                        Http::redirect(dcCore::app()->admin->getPageURL());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -182,7 +183,7 @@ class Manage extends dcNsProcess
                         $smilies_editor->setSmilies($smilies);
                         $smilies_editor->setConfig($smilies);
                         dcPage::addSuccessNotice(__('Smilies has been successfully updated.'));
-                        Http::redirect(dcCore::app()->admin->getPageURL());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -197,7 +198,7 @@ class Manage extends dcNsProcess
 
                         $smilies_editor->setConfig($smilies);
                         dcPage::addSuccessNotice(__('These selected smilies are now displayed on toolbar'));
-                        Http::redirect(dcCore::app()->admin->getPageURL());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -212,7 +213,7 @@ class Manage extends dcNsProcess
 
                         $smilies_editor->setConfig($smilies);
                         dcPage::addSuccessNotice(__('These selected smilies are now hidden on toolbar.'));
-                        Http::redirect(dcCore::app()->admin->getPageURL());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -229,7 +230,7 @@ class Manage extends dcNsProcess
 
                 $smilies_editor->setSmilies($smilies);
                 dcPage::addSuccessNotice(__('A new smiley has been successfully created'));
-                Http::redirect(dcCore::app()->admin->getPageURL());
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
