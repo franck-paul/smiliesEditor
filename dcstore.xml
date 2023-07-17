@@ -1,10 +1,10 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="smiliesEditor">
     <name>smiliesEditor</name>
-    <version>2.4</version>
+    <version>2.4.1</version>
     <author>Osku and contributors</author>
     <desc>Smilies Editor</desc>
-    <file>https://github.com/franck-paul/smiliesEditor/releases/download/2.4/plugin-smiliesEditor-2.4.zip</file>
+    <file>https://github.com/franck-paul/smiliesEditor/releases/download/2.4.1/plugin-smiliesEditor-2.4.1.zip</file>
     <da:dcmin>2.26</da:dcmin>
     <da:details>https://plugins.dotaddict.org/dc2/details/smiliesEditor</da:details>
     <da:support>https://github.com/franck-paul/smiliesEditor</da:support>
