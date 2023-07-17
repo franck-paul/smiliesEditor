@@ -267,6 +267,8 @@ class Manage extends dcNsProcess
             return;
         }
 
+        $combo_action = [];
+
         $settings = dcCore::app()->blog->settings->get(My::id());
         $theme    = dcCore::app()->blog->settings->system->theme;
 
