@@ -15,34 +15,31 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\smiliesEditor;
 
 use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Process;
 
-class Frontend extends dcNsProcess
+class Frontend extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::FRONTEND);
-
-        return static::$init;
+        return self::status(My::checkContext(My::FRONTEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
-        dcCore::app()->addBehavior('publicFooterContent', [FrontendBehaviors::class,'publicFooterContent']);
-        dcCore::app()->addBehavior('publicCommentFormAfterContent', [FrontendBehaviors::class,'publicFormAfterContent']);
-        dcCore::app()->addBehavior('publicAnswerFormAfterContent', [FrontendBehaviors::class,'publicFormAfterContent']);
-        dcCore::app()->addBehavior('publicEditFormAfter', [FrontendBehaviors::class,'publicFormAfterContent']);
-        dcCore::app()->addBehavior('publicEntryFormAfter', [FrontendBehaviors::class,'publicFormAfterContent']);
-        dcCore::app()->addBehavior('publicEditEntryFormAfter', [FrontendBehaviors::class,'publicFormAfterContent']);
+        dcCore::app()->addBehavior('publicFooterContent', FrontendBehaviors::publicFooterContent(...));
+        dcCore::app()->addBehavior('publicCommentFormAfterContent', FrontendBehaviors::publicFormAfterContent(...));
+        dcCore::app()->addBehavior('publicAnswerFormAfterContent', FrontendBehaviors::publicFormAfterContent(...));
+        dcCore::app()->addBehavior('publicEditFormAfter', FrontendBehaviors::publicFormAfterContent(...));
+        dcCore::app()->addBehavior('publicEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
+        dcCore::app()->addBehavior('publicEditEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
 
         $settings = dcCore::app()->blog->settings->get(My::id());
         if ($settings->smilies_preview_flag) {
-            dcCore::app()->addBehavior('publicBeforeCommentPreview', [FrontendBehaviors::class,'publicBeforePreview']);
+            dcCore::app()->addBehavior('publicBeforeCommentPreview', FrontendBehaviors::publicBeforeCommentPreview(...));
         }
 
         return true;

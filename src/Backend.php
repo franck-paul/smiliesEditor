@@ -14,47 +14,44 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
-use dcAdmin;
 use dcCore;
-use dcNsProcess;
+use Dotclear\Core\Backend\Menus;
+use Dotclear\Core\Process;
 
-class Backend extends dcNsProcess
+class Backend extends Process
 {
-    protected static $init = false; /** @deprecated since 2.27 */
     public static function init(): bool
     {
-        static::$init = My::checkContext(My::BACKEND);
-
         // dead but useful code, in order to have translations
         __('smiliesEditor') . __('Smilies Editor');
 
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
-        dcCore::app()->menu[dcAdmin::MENU_BLOG]->addItem(
+        dcCore::app()->admin->menus[Menus::MENU_BLOG]->addItem(
             __('Smilies Editor'),
-            My::makeUrl(),
+            My::manageUrl(),
             My::icons(),
             preg_match(My::urlScheme(), $_SERVER['REQUEST_URI']),
             My::checkContext(My::MENU)
         );
 
-        dcCore::app()->addBehavior('adminPreferencesForm', [BackendBehaviors::class,'adminUserForm']);
-        dcCore::app()->addBehavior('adminUserForm', [BackendBehaviors::class,'adminUserForm']);
-        dcCore::app()->addBehavior('adminBeforeUserCreate', [BackendBehaviors::class,'setSmiliesDisplay']);
-        dcCore::app()->addBehavior('adminBeforeUserUpdate', [BackendBehaviors::class,'setSmiliesDisplay']);
+        dcCore::app()->addBehavior('adminPreferencesForm', BackendBehaviors::adminUserForm(...));
+        dcCore::app()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));
+        dcCore::app()->addBehavior('adminBeforeUserCreate', BackendBehaviors::setSmiliesDisplay(...));
+        dcCore::app()->addBehavior('adminBeforeUserUpdate', BackendBehaviors::setSmiliesDisplay(...));
 
         if (dcCore::app()->auth->getOption('smilies_editor_admin')) {
-            dcCore::app()->addBehavior('adminPostHeaders', [BackendBehaviors::class,'adminPostHeaders']);
-            dcCore::app()->addBehavior('adminPageHeaders', [BackendBehaviors::class,'adminPostHeaders']);
-            dcCore::app()->addBehavior('adminRelatedHeaders', [BackendBehaviors::class,'adminPostHeaders']);
-            dcCore::app()->addBehavior('adminDashboardHeaders', [BackendBehaviors::class,'adminPostHeaders']);
+            dcCore::app()->addBehavior('adminPostHeaders', BackendBehaviors::adminPostHeaders(...));
+            dcCore::app()->addBehavior('adminPageHeaders', BackendBehaviors::adminPostHeaders(...));
+            dcCore::app()->addBehavior('adminRelatedHeaders', BackendBehaviors::adminPostHeaders(...));
+            dcCore::app()->addBehavior('adminDashboardHeaders', BackendBehaviors::adminPostHeaders(...));
         }
 
         return true;
