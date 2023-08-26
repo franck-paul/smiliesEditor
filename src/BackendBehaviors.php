@@ -42,7 +42,7 @@ class BackendBehaviors
 
     public static function setSmiliesDisplay($cur, $user_id = null)
     {
-        if (!is_null($user_id)) {
+        if (!is_null($user_id) && isset($_POST['smilies_editor_admin'])) {
             $cur->user_options['smilies_editor_admin'] = $_POST['smilies_editor_admin'];
         }
     }

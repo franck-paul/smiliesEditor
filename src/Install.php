@@ -43,7 +43,7 @@ class Install extends Process
             }
 
             // Init
-            $settings = dcCore::app()->blog->settings->get(My::id());
+            $settings = My::settings();
 
             $settings->put('smilies_bar_flag', false, dcNamespace::NS_BOOL, 'Show smilies toolbar', false, true);
             $settings->put('smilies_preview_flag', false, dcNamespace::NS_BOOL, 'Show smilies on preview', false, true);

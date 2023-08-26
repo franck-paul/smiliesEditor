@@ -45,7 +45,7 @@ class Manage extends Process
             return false;
         }
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
 
         // Get smilies code
         $smilies_editor = new CoreHelper();
@@ -267,7 +267,7 @@ class Manage extends Process
 
         $combo_action = [];
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
         $theme    = dcCore::app()->blog->settings->system->theme;
 
         // Init
@@ -337,7 +337,7 @@ class Manage extends Process
         My::jsLoad('_smilies.js') .
         My::cssLoad('admin.css');
 
-        Page::openModule(__('Smilies Editor'), $head);
+        Page::openModule(My::name(), $head);
 
         echo Page::breadcrumb(
             [
@@ -381,7 +381,7 @@ class Manage extends Process
                                 ) .
                             '</p>' .
                             '<p class="clear">' .
-                                dcCore::app()->formNonce() .
+                                My::parsedHiddenFields() .
                                 '<input type="submit" name="saveconfig" value="' . __('Save') . '" />' .
                             '</p>' .
                         '</div>' .
@@ -429,10 +429,11 @@ class Manage extends Process
         <p class="col checkboxes-helpers"></p>';
 
             echo    '<p class="col right">' . __('Selected smilies action:') . ' ' .
-                form::hidden('smilies_order', '') .
-                form::hidden(['p'], 'smiliesEditor') .
                 form::combo('actionsmilies', $combo_action) .
-                dcCore::app()->formNonce() .
+                My::parsedHiddenFields([
+                    'smilies_order' => '',
+                    'p'             => 'smiliesEditor',
+                ]) .
                 '<input type="submit" value="' . __('Ok') . '" /></p>';
 
             if ((dcCore::app()->auth->isSuperAdmin() && $theme != 'blowup')) {
@@ -448,8 +449,10 @@ class Manage extends Process
 
         if (empty($images_all)) {
             if (empty($smilies_editor->filemanager)) {
-                echo '<div class="col"><form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="dir_form"><p>' . form::hidden(['p'], 'smiliesEditor') .
-                dcCore::app()->formNonce() .
+                echo '<div class="col"><form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="dir_form"><p>' .
+                My::parsedHiddenFields([
+                    'p' => 'smiliesEditor',
+                ]) .
                 '<input type="submit" name="create_dir" value="' . __('Initialize') . '" /></p></form></div>';
             }
         } else {
@@ -470,9 +473,9 @@ class Manage extends Process
             <abbr title="' . __('Required field') . '">*</abbr>
             ' . __('Code:') . ' ' .
                     form::field('smilecode', 20, 255) . '</label>' .
-
-                    form::hidden(['p'], 'smiliesEditor') .
-                    dcCore::app()->formNonce() .
+                    My::parsedHiddenFields([
+                        'p' => 'smiliesEditor',
+                    ]) .
                     '&nbsp; <input type="submit" name="add_message" value="' . __('Create') . '" /></p>' .
                     '</form></div>';
             }
@@ -482,8 +485,10 @@ class Manage extends Process
             echo
             '<div class="col"><form id="upl-smile-form" action="' . Html::escapeURL(dcCore::app()->admin->getPageURL()) . '" method="post" enctype="multipart/form-data">' .
             '<h3>' . __('New image') . '</h3>' .
-            '<p>' . form::hidden(['MAX_FILE_SIZE'], DC_MAX_UPLOAD_SIZE) .
-            dcCore::app()->formNonce() .
+            '<p>' .
+            My::parsedHiddenFields([
+                'MAX_FILE_SIZE' => (string) DC_MAX_UPLOAD_SIZE,
+            ]) .
             '<label>' . __('Choose a file:') .
             ' (' . sprintf(__('Maximum size %s'), Files::size((int) DC_MAX_UPLOAD_SIZE)) . ')' .
             '<input type="file" name="upfile" size="20" />' .
@@ -506,8 +511,10 @@ class Manage extends Process
                 echo '</p>';
 
                 echo
-                '<p>' . form::hidden(['p'], 'smiliesEditor') .
-                dcCore::app()->formNonce() .
+                '<p>' .
+                My::parsedHiddenFields([
+                    'p' => 'smiliesEditor',
+                ]) .
                 '<input type="submit" name="rm_unused_img"
         value="' . __('Delete') . '"
         /></p></form></div>';

@@ -34,13 +34,7 @@ class Backend extends Process
             return false;
         }
 
-        dcCore::app()->admin->menus[Menus::MENU_BLOG]->addItem(
-            __('Smilies Editor'),
-            My::manageUrl(),
-            My::icons(),
-            preg_match(My::urlScheme(), $_SERVER['REQUEST_URI']),
-            My::checkContext(My::MENU)
-        );
+        My::addBackendMenuItem(Menus::MENU_BLOG);
 
         dcCore::app()->addBehavior('adminPreferencesForm', BackendBehaviors::adminUserForm(...));
         dcCore::app()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));

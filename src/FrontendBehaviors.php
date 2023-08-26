@@ -22,7 +22,7 @@ class FrontendBehaviors
 {
     public static function publicFooterContent()
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
 
         $use_smilies      = (bool) dcCore::app()->blog->settings->system->use_smilies;
         $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
@@ -37,7 +37,7 @@ class FrontendBehaviors
 
     public static function publicFormAfterContent()
     {
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
 
         $use_smilies      = (bool) dcCore::app()->blog->settings->system->use_smilies;
         $smilies_bar_flag = (bool) $settings->smilies_bar_flag;

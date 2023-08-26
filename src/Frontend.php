@@ -37,7 +37,7 @@ class Frontend extends Process
         dcCore::app()->addBehavior('publicEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
         dcCore::app()->addBehavior('publicEditEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
 
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $settings = My::settings();
         if ($settings->smilies_preview_flag) {
             dcCore::app()->addBehavior('publicBeforeCommentPreview', FrontendBehaviors::publicBeforeCommentPreview(...));
         }
