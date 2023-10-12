@@ -15,20 +15,29 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\smiliesEditor;
 
 use dcCore;
+use Dotclear\Database\Cursor;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Html;
 use form;
 
 class BackendBehaviors
 {
-    public static function adminUserForm($args)
+    /**
+     * @param      dcCore|Metarecord   $args   The arguments
+     *
+     * @return     string
+     */
+    public static function adminUserForm($args): string
     {
+        /**
+         * @var        array<string, mixed>
+         */
+        $opts = [];
+
         if ($args instanceof dcCore) {
             $opts = $args->auth->getOptions();
         } elseif ($args instanceof MetaRecord) {
             $opts = $args->options();
-        } else {
-            $opts = [];
         }
 
         $value = array_key_exists('smilies_editor_admin', $opts) ? $opts['smilies_editor_admin'] : false;
@@ -38,16 +47,20 @@ class BackendBehaviors
         '<p><label class="classic">' .
         form::checkbox('smilies_editor_admin', '1', $value) . __('Display smilies on toolbar') .
         '</label></p></fieldset>';
+
+        return '';
     }
 
-    public static function setSmiliesDisplay($cur, $user_id = null)
+    public static function setSmiliesDisplay(Cursor $cur, ?string $user_id = null): string
     {
         if (!is_null($user_id) && isset($_POST['smilies_editor_admin'])) {
             $cur->user_options['smilies_editor_admin'] = $_POST['smilies_editor_admin'];
         }
+
+        return '';
     }
 
-    public static function adminPostHeaders()
+    public static function adminPostHeaders(): string
     {
         $res = '<script type="text/javascript">' . "\n";
 

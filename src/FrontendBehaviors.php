@@ -20,7 +20,7 @@ use Dotclear\Helper\Html\Html;
 
 class FrontendBehaviors
 {
-    public static function publicFooterContent()
+    public static function publicFooterContent(): string
     {
         $settings = My::settings();
 
@@ -30,12 +30,12 @@ class FrontendBehaviors
         if ($smilies_bar_flag && $use_smilies) {
             $js = Html::stripHostURL(dcCore::app()->blog->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
             echo "\n" . '<script type="text/javascript" src="' . $js . '"></script>' . "\n";
-        } else {
-            return;
         }
+
+        return '';
     }
 
-    public static function publicFormAfterContent()
+    public static function publicFormAfterContent(): string
     {
         $settings = My::settings();
 
@@ -44,7 +44,7 @@ class FrontendBehaviors
         $public_text      = $settings->smilies_public_text;
 
         if (!$smilies_bar_flag || !$use_smilies) {
-            return;
+            return '';
         }
 
         $sE      = new CoreHelper();
@@ -63,11 +63,15 @@ class FrontendBehaviors
         if ($res != '') {
             echo sprintf($field, $res);
         }
+
+        return '';
     }
 
-    public static function publicBeforeCommentPreview()
+    public static function publicBeforeCommentPreview(): string
     {
         dcCore::app()->public->smilies                 = context::getSmilies(dcCore::app()->blog);
         dcCore::app()->ctx->comment_preview['content'] = context::addSmilies(dcCore::app()->ctx->comment_preview['content']);
+
+        return '';
     }
 }

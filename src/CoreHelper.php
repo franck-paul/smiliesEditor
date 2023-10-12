@@ -23,21 +23,35 @@ use Exception;
 
 class CoreHelper
 {
-    protected $smilies_dir       = 'smilies';
-    protected $smilies_file_name = 'smilies.txt';
+    protected string $smilies_dir       = 'smilies';
+    protected string $smilies_file_name = 'smilies.txt';
 
-    protected $smilies_desc_file ;
+    protected string $smilies_desc_file ;
 
-    public $smilies_base_url;
-    public $smilies_path;
+    public string $smilies_base_url;
+    public string $smilies_path;
 
-    public $smilies_config;
-    public $smilies_list = [];
+    /**
+     * @var array<string>
+     */
+    public array $smilies_config;
 
-    public $filemanager;
-    public $files_list = [];
+    /**
+     * @var array<int, array<string, mixed>>
+     */
+    public array $smilies_list = [];
 
-    public $images_list = [];
+    public Manager $filemanager;
+
+    /**
+     * @var array<string, array<string, string>>
+     */
+    public array $files_list = [];
+
+    /**
+     * @var array<string, array<string, string>>
+     */
+    public array $images_list = [];
 
     public function __construct()
     {
@@ -50,7 +64,12 @@ class CoreHelper
         $this->smilies_config    = unserialize((string) $smi->smilies_toolbar);
     }
 
-    public function getSmilies()
+    /**
+     * Gets the smilies.
+     *
+     * @return     array<int, array<string, mixed>>  The smilies.
+     */
+    public function getSmilies(): array
     {
         if (file_exists($this->smilies_desc_file)) {
             $rule = file($this->smilies_desc_file);
@@ -69,57 +88,78 @@ class CoreHelper
         return $this->smilies_list;
     }
 
-    public function setSmilies($smilies)
+    /**
+     * Sets the smilies.
+     *
+     * @param      array<int, array<string, string>>      $smilies  The smilies
+     *
+     * @throws     Exception
+     *
+     * @return     bool
+     */
+    public function setSmilies(array $smilies): bool
     {
-        if (is_array($smilies)) {
-            if (!is_writable($this->smilies_path)) {
-                throw new Exception(__('Configuration file is not writable.'));
-            }
+        if (!is_writable($this->smilies_path)) {
+            throw new Exception(__('Configuration file is not writable.'));
+        }
 
-            if (is_writable($this->smilies_desc_file) || !file_exists($this->smilies_desc_file)) {
-                try {
-                    $fp = @fopen($this->smilies_desc_file, 'wb');
-                    if (!$fp) {
-                        throw new Exception('tocatch');
-                    }
-                    $fcontent = '';
-
-                    foreach ($smilies as $smiley) {
-                        $fcontent .= $smiley['code'] . "\t\t" . $smiley['name'] . "\r\n";
-                    }
-                    fwrite($fp, $fcontent);
-                    fclose($fp);
-                } catch (Exception $e) {
-                    throw new Exception(sprintf(__('Unable to write file %s. Please check your theme file and folders permissions.'), $this->smilies_desc_file));
+        if (is_writable($this->smilies_desc_file) || !file_exists($this->smilies_desc_file)) {
+            try {
+                $fp = @fopen($this->smilies_desc_file, 'wb');
+                if (!$fp) {
+                    throw new Exception('tocatch');
                 }
+                $fcontent = '';
+
+                foreach ($smilies as $smiley) {
+                    $fcontent .= $smiley['code'] . "\t\t" . $smiley['name'] . "\r\n";
+                }
+                fwrite($fp, $fcontent);
+                fclose($fp);
+
+                return true;
+            } catch (Exception $e) {
+                throw new Exception(sprintf(__('Unable to write file %s. Please check your theme file and folders permissions.'), $this->smilies_desc_file));
             }
         }
 
         return false;
     }
 
-    public function setConfig($smilies)
+    /**
+     * Sets the configuration.
+     *
+     * @param      array<int, array<string, string>>      $smilies  The smilies
+     *
+     * @return     bool
+     */
+    public function setConfig(array $smilies): bool
     {
-        if (is_array($smilies)) {
-            $config = [];
-
-            foreach ($smilies as $smiley) {
-                if ($smiley['onSmilebar']) {
-                    $config[] = $smiley['code'];
-                }
+        $config = [];
+        foreach ($smilies as $smiley) {
+            if ($smiley['onSmilebar']) {
+                $config[] = $smiley['code'];
             }
-            $s = dcCore::app()->blog->settings->smilieseditor;
-            $s->put('smilies_toolbar', serialize($config), 'string');
-
-            dcCore::app()->blog->triggerBlog();
-
-            return true;
         }
+        $s = dcCore::app()->blog->settings->smilieseditor;
+        $s->put('smilies_toolbar', serialize($config), 'string');
 
-        return false;
+        dcCore::app()->blog->triggerBlog();
+
+        return true;
     }
 
-    public function uploadSmile($tmp, $name)
+    /**
+     * Uploads a smile.
+     *
+     * @param      string     $tmp    The temporary uploaded file
+     * @param      string     $name   The filename
+     *
+     * @throws     Exception
+     *
+     * @return     string|void
+     */
+    public function uploadSmile(string $tmp, string $name)
     {
         $name = Files::tidyFileName($name);
 
@@ -153,7 +193,7 @@ class CoreHelper
         throw new Exception(sprintf(__('This file %s is not an image. It would be difficult to use it for a smiley.'), $name));
     }
 
-    public function getFiles()
+    public function getFiles(): void
     {
         try {
             $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
@@ -170,7 +210,7 @@ class CoreHelper
         }
     }
 
-    public function createDir()
+    public function createDir(): void
     {
         try {
             Files::makeDir(dcCore::app()->blog->themes_path . '/' . dcCore::app()->blog->settings->system->theme . '/' . Path::clean($this->smilies_dir));
@@ -179,7 +219,7 @@ class CoreHelper
         }
     }
 
-    public function loadAllSmilies($zip_file)
+    public function loadAllSmilies(string $zip_file): bool
     {
         $zip = new Unzip($zip_file);
         $zip->getList(false, '#(^|/)(__MACOSX|\.directory|\.svn|\.DS_Store|Thumbs\.db)(/|$)#');

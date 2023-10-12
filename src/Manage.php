@@ -223,7 +223,7 @@ class Manage extends Process
 
         if (!empty($_POST['smilecode']) && !empty($_POST['smilepic'])) {
             try {
-                $count                   = is_countable($smilies) ? count($smilies) : 0;
+                $count                   = count($smilies);
                 $smilies[$count]['code'] = preg_replace('/[\s]+/', '', (string) $_POST['smilecode']);
                 $smilies[$count]['name'] = $_POST['smilepic'];
 
