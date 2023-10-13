@@ -34,7 +34,7 @@ class CoreHelper
     /**
      * @var array<string>
      */
-    public array $smilies_config;
+    public array $smilies_config = [];
 
     /**
      * @var array<int, array<string, mixed>>
@@ -61,7 +61,9 @@ class CoreHelper
         $this->smilies_desc_file = dcCore::app()->blog->themes_path . '/' . $sys->theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
         $this->smilies_base_url  = $sys->themes_url . '/' . $sys->theme . '/' . $this->smilies_dir . '/';
         $this->smilies_path      = dcCore::app()->blog->themes_path . '/' . $sys->theme . '/' . $this->smilies_dir;
-        $this->smilies_config    = unserialize((string) $smi->smilies_toolbar);
+        if (($config = unserialize((string) $smi->smilies_toolbar)) !== false) {
+            $this->smilies_config = $config;
+        }
     }
 
     /**
