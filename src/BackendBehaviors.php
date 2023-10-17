@@ -74,9 +74,9 @@ class BackendBehaviors
                     'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wiki = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
                     'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.xhtml = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
                     'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wysiwyg = function() {
-						smiley = document.createTextNode('" . Html::escapeJS($smiley['code']) . " ');
-						this.insertNode(smiley);
-					};\n";
+                        smiley = document.createTextNode('" . Html::escapeJS($smiley['code']) . " ');
+                        this.insertNode(smiley);
+                    };\n";
             }
         }
         $res .= "</script>\n";
