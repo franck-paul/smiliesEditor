@@ -49,14 +49,18 @@ class Manage extends Process
 
         // Get smilies code
         $smilies_editor = new CoreHelper();
-        $smilies        = $smilies_editor->getSmilies();
+
+        /**
+         * @var array<int, array<string, mixed>>
+         */
+        $smilies = $smilies_editor->getSmilies();
 
         $theme = dcCore::app()->blog->settings->system->theme;
 
         if (!empty($_POST['create_dir'])) {
             try {
                 $smilies_editor->createDir();
-                dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 Notices::addSuccessNotice(__('The subfolder has been successfully created'));
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -75,7 +79,7 @@ class Manage extends Process
 
                 dcCore::app()->blog->triggerBlog();
                 Notices::addSuccessNotice(__('Configuration successfully updated.'));
-                dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -86,12 +90,12 @@ class Manage extends Process
             try {
                 // Create array of used smilies filename
                 $smileys_list = [];
-                foreach ($smilies as $k => $v) {
+                foreach ($smilies as $v) {
                     $smileys_list = array_merge($smileys_list, [$v['name'] => $v['name']]);
                 }
 
                 if (!empty($smilies_editor->images_list)) {
-                    foreach ($smilies_editor->images_list as $k => $v) {
+                    foreach ($smilies_editor->images_list as $v) {
                         if (!array_key_exists($v['name'], $smileys_list)) {
                             try {
                                 $smilies_editor->filemanager->removeItem($v['name']);
@@ -103,7 +107,7 @@ class Manage extends Process
                 }
 
                 Notices::addSuccessNotice(__('Unused images have been successfully removed.'));
-                dcCore::app()->admin->url->redirect('admin.plugin.' . My::id(), [
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), [
                     'dircleaned' => 1,
                 ]);
             } catch (Exception $e) {
@@ -118,10 +122,10 @@ class Manage extends Process
                 $file = $smilies_editor->uploadSmile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name']);
                 if ($file) {
                     Notices::addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), $_GET['upok']));
-                    dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 } else {
                     Notices::addSuccessNotice(__('A smilies zip package has been successfully installed.'));
-                    dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 }
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
@@ -140,12 +144,16 @@ class Manage extends Process
 
             if (!empty($order)) {
                 try {
+                    /**
+                     * @var array<int, array<string, mixed>>
+                     */
+                    $new_smilies = [];
                     foreach ($order as $v) {
-                        $new_smilies[$v] = $smilies[$v];
+                        $new_smilies[(int) $v] = $smilies[(int) $v];
                     }
                     $smilies_editor->setSmilies($new_smilies);
                     Notices::addSuccessNotice(__('Order of smilies has been successfully changed.'));
-                    dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                    dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                 } catch (Exception $e) {
                     dcCore::app()->error->add($e->getMessage());
                 }
@@ -158,14 +166,14 @@ class Manage extends Process
             switch ($action) {
                 case 'clear':
                     try {
-                        foreach ($_POST['select'] as $k => $v) {
+                        foreach ($_POST['select'] as $v) {
                             unset($smilies[$v]);
                         }
 
                         $smilies_editor->setSmilies($smilies);
                         $smilies_editor->setConfig($smilies);
                         Notices::addSuccessNotice(__('Smilies has been successfully removed.'));
-                        dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -174,15 +182,15 @@ class Manage extends Process
 
                 case 'update':
                     try {
-                        foreach ($_POST['select'] as $k => $v) {
-                            $smilies[$v]['code'] = isset($_POST['code'][$v]) ? preg_replace('/[\s]+/', '', (string) $_POST['code'][$v]) : $smilies[$v]['code'] ;
-                            $smilies[$v]['name'] = $_POST['name'][$v] ?? $smilies[$v]['name'];
+                        foreach ($_POST['select'] as $v) {
+                            $smilies[(int) $v]['code'] = isset($_POST['code'][$v]) ? preg_replace('/[\s]+/', '', (string) $_POST['code'][$v]) : $smilies[(int) $v]['code'] ;
+                            $smilies[(int) $v]['name'] = $_POST['name'][$v] ?? $smilies[$v]['name'];
                         }
 
                         $smilies_editor->setSmilies($smilies);
                         $smilies_editor->setConfig($smilies);
                         Notices::addSuccessNotice(__('Smilies has been successfully updated.'));
-                        dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -191,13 +199,13 @@ class Manage extends Process
 
                 case 'display':
                     try {
-                        foreach ($_POST['select'] as $k => $v) {
-                            $smilies[$v]['onSmilebar'] = true;
+                        foreach ($_POST['select'] as $v) {
+                            $smilies[(int) $v]['onSmilebar'] = true;
                         }
 
                         $smilies_editor->setConfig($smilies);
                         Notices::addSuccessNotice(__('These selected smilies are now displayed on toolbar'));
-                        dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -206,13 +214,13 @@ class Manage extends Process
 
                 case 'hide':
                     try {
-                        foreach ($_POST['select'] as $k => $v) {
-                            $smilies[$v]['onSmilebar'] = false;
+                        foreach ($_POST['select'] as $v) {
+                            $smilies[(int) $v]['onSmilebar'] = false;
                         }
 
                         $smilies_editor->setConfig($smilies);
                         Notices::addSuccessNotice(__('These selected smilies are now hidden on toolbar.'));
-                        dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                        dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
                     } catch (Exception $e) {
                         dcCore::app()->error->add($e->getMessage());
                     }
@@ -223,13 +231,14 @@ class Manage extends Process
 
         if (!empty($_POST['smilecode']) && !empty($_POST['smilepic'])) {
             try {
-                $count                   = count($smilies);
+                $count = (int) count($smilies);
+
                 $smilies[$count]['code'] = preg_replace('/[\s]+/', '', (string) $_POST['smilecode']);
                 $smilies[$count]['name'] = $_POST['smilepic'];
 
                 $smilies_editor->setSmilies($smilies);
                 Notices::addSuccessNotice(__('A new smiley has been successfully created'));
-                dcCore::app()->admin->url->redirect('admin.plugin.' . My::id());
+                dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
                 dcCore::app()->error->add($e->getMessage());
             }
@@ -349,7 +358,7 @@ class Manage extends Process
 
         // Form
         echo
-        '<p>' . sprintf(__('Your <a href="%s">current theme</a> on this blog is "%s".'), dcCore::app()->admin->url->get('admin.blog.theme'), '<strong>' . Html::escapeHTML($theme_define->get('name')) . '</strong>') . '</p>';
+        '<p>' . sprintf(__('Your <a href="%s">current theme</a> on this blog is "%s".'), dcCore::app()->adminurl->get('admin.blog.theme'), '<strong>' . Html::escapeHTML($theme_define->get('name')) . '</strong>') . '</p>';
 
         if (empty($smilies)) {
             if (!empty($smilies_editor->filemanager)) {
@@ -377,7 +386,7 @@ class Manage extends Process
                             '<br /><p class="clear form-note">' .
                                 sprintf(
                                     __('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'),
-                                    dcCore::app()->admin->url->get('admin.blog.pref') . '#params.use_smilies'
+                                    dcCore::app()->adminurl->get('admin.blog.pref') . '#params.use_smilies'
                                 ) .
                             '</p>' .
                             '<p class="clear">' .
@@ -436,7 +445,7 @@ class Manage extends Process
                 ]) .
                 '<input type="submit" value="' . __('Ok') . '" /></p>';
 
-            if ((dcCore::app()->auth->isSuperAdmin() && $theme != 'blowup')) {
+            if (dcCore::app()->auth->isSuperAdmin() && $theme != 'blowup') {
                 echo '<p><input type="submit" name="saveorder" id="saveorder"
         value="' . __('Save order') . '"
         /></p>';
@@ -457,21 +466,18 @@ class Manage extends Process
             }
         } else {
             if (dcCore::app()->auth->isSuperAdmin() && $theme != 'blowup') {
-                $val            = array_values($images_all);
-                $preview_smiley = '<img class="smiley" src="' . dcCore::app()->blog->host . $val[0]['url'] . '" alt="' . $val[0]['name'] . '" title="' . $val[0]['name'] . '" id="smiley-preview" />';
-
                 echo
                     '<div class="col">' .
                     '<form action="' . dcCore::app()->admin->getPageURL() . '" method="post" id="add-smiley-form">' .
                     '<h3>' . __('New smiley') . '</h3>' .
                     '<p><label for="smilepic" class="classic required">
-            <abbr title="' . __('Required field') . '">*</abbr>
-            ' . __('Image:') . ' ' .
+                    <abbr title="' . __('Required field') . '">*</abbr>
+                    ' . __('Image:') . ' ' .
                     form::combo('smilepic', $smileys_combo) . '</label></p>' .
 
                     '<p><label for="smilecode" class="classic required">
-            <abbr title="' . __('Required field') . '">*</abbr>
-            ' . __('Code:') . ' ' .
+                    <abbr title="' . __('Required field') . '">*</abbr>
+                    ' . __('Code:') . ' ' .
                     form::field('smilecode', 20, 255) . '</label>' .
                     My::parsedHiddenFields([
                         'p' => 'smiliesEditor',

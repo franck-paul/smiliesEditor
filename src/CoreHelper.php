@@ -75,14 +75,15 @@ class CoreHelper
     {
         if (file_exists($this->smilies_desc_file)) {
             $rule = file($this->smilies_desc_file);
-
-            foreach ($rule as $v) {
-                $v = trim($v);
-                if (preg_match('|^([^\t]*)[\t]+(.*)$|', $v, $m)) {
-                    $this->smilies_list[] = [
-                        'code'       => $m[1],
-                        'name'       => $m[2],
-                        'onSmilebar' => !is_array($this->smilies_config) || in_array($m[1], $this->smilies_config)];
+            if ($rule !== false) {
+                foreach ($rule as $v) {
+                    $v = trim($v);
+                    if (preg_match('|^([^\t]*)[\t]+(.*)$|', $v, $m)) {
+                        $this->smilies_list[] = [
+                            'code'       => $m[1],
+                            'name'       => $m[2],
+                            'onSmilebar' => !is_array($this->smilies_config) || in_array($m[1], $this->smilies_config)];
+                    }
                 }
             }
         }
@@ -93,7 +94,7 @@ class CoreHelper
     /**
      * Sets the smilies.
      *
-     * @param      array<int, array<string, string>>      $smilies  The smilies
+     * @param      array<int, array<string, mixed>>      $smilies  The smilies
      *
      * @throws     Exception
      *
@@ -131,7 +132,7 @@ class CoreHelper
     /**
      * Sets the configuration.
      *
-     * @param      array<int, array<string, string>>      $smilies  The smilies
+     * @param      array<int, array<string, mixed>>      $smilies  The smilies
      *
      * @return     bool
      */
@@ -171,7 +172,11 @@ class CoreHelper
 
         if (($type == 'image/jpeg' || $type == 'image/png')) {
             $s = getimagesize($file);
-            if ($s[0] > 24 || $s[1] > 24) {
+            if ($s === false) {
+                $this->filemanager->removeItem($name);
+
+                throw new Exception(__('Unable to get image size.'));
+            } elseif ($s[0] > 24 || $s[1] > 24) {
                 $this->filemanager->removeItem($name);
 
                 throw new Exception(__('Uploaded image is too big (height or width > 24px).'));
@@ -200,7 +205,7 @@ class CoreHelper
         try {
             $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
             $this->filemanager->getDir();
-            foreach ($this->filemanager->dir['files'] as $k => $v) {
+            foreach ($this->filemanager->getFiles() as $v) {
                 $this->files_list[$v->basename] = [$v->basename => 'name',  $v->file_url => 'url', $v->type => 'type'];
 
                 if (preg_match('/^(image)(.+)$/', $v->type)) {
