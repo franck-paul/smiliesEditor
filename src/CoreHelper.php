@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\File\Manager;
 use Dotclear\Helper\File\Path;
@@ -55,12 +55,12 @@ class CoreHelper
 
     public function __construct()
     {
-        $smi = & dcCore::app()->blog->settings->smilieseditor;
-        $sys = & dcCore::app()->blog->settings->system;
+        $smi = My::settings();
+        $sys = App::blog()->settings()->system;
 
-        $this->smilies_desc_file = dcCore::app()->blog->themes_path . '/' . $sys->theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
+        $this->smilies_desc_file = App::blog()->themesPath() . '/' . $sys->theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
         $this->smilies_base_url  = $sys->themes_url . '/' . $sys->theme . '/' . $this->smilies_dir . '/';
-        $this->smilies_path      = dcCore::app()->blog->themes_path . '/' . $sys->theme . '/' . $this->smilies_dir;
+        $this->smilies_path      = App::blog()->themesPath() . '/' . $sys->theme . '/' . $this->smilies_dir;
         if (($config = unserialize((string) $smi->smilies_toolbar)) !== false) {
             $this->smilies_config = $config;
         }
@@ -144,10 +144,9 @@ class CoreHelper
                 $config[] = $smiley['code'];
             }
         }
-        $s = dcCore::app()->blog->settings->smilieseditor;
-        $s->put('smilies_toolbar', serialize($config), 'string');
+        My::settings()->put('smilies_toolbar', serialize($config), 'string');
 
-        dcCore::app()->blog->triggerBlog();
+        App::blog()->triggerBlog();
 
         return true;
     }
@@ -208,7 +207,7 @@ class CoreHelper
             foreach ($this->filemanager->getFiles() as $v) {
                 $this->files_list[$v->basename] = [$v->basename => 'name',  $v->file_url => 'url', $v->type => 'type'];
 
-                if (preg_match('/^(image)(.+)$/', $v->type)) {
+                if (preg_match('/^(image)(.+)$/', (string) $v->type) !== false) {
                     $this->images_list[$v->basename] = ['name' => $v->basename,  'url' => $v->file_url];
                 }
             }
@@ -220,7 +219,7 @@ class CoreHelper
     public function createDir(): void
     {
         try {
-            Files::makeDir(dcCore::app()->blog->themes_path . '/' . dcCore::app()->blog->settings->system->theme . '/' . Path::clean($this->smilies_dir));
+            Files::makeDir(App::blog()->themesPath() . '/' . App::blog()->settings()->system->theme . '/' . Path::clean($this->smilies_dir));
         } catch (Exception $e) {
             throw new Exception(sprintf(__('Unable to create subfolder %s in your theme. Please check your folder permissions.'), $this->smilies_dir));
         }

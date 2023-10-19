@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\smiliesEditor;
 use dcCore;
 use dcNamespace;
 use dcThemes;
+use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
@@ -55,7 +56,7 @@ class Manage extends Process
          */
         $smilies = $smilies_editor->getSmilies();
 
-        $theme = dcCore::app()->blog->settings->system->theme;
+        $theme = App::blog()->settings()->system->theme;
 
         if (!empty($_POST['create_dir'])) {
             try {
@@ -77,7 +78,7 @@ class Manage extends Process
                 $settings->put('smilies_preview_flag', $preview, dcNamespace::NS_BOOL, 'Show smilies on preview');
                 $settings->put('smilies_public_text', $formtext, dcNamespace::NS_STRING, 'Smilies displayed in toolbar');
 
-                dcCore::app()->blog->triggerBlog();
+                App::blog()->triggerBlog();
                 Notices::addSuccessNotice(__('Configuration successfully updated.'));
                 dcCore::app()->adminurl->redirect('admin.plugin.' . My::id());
             } catch (Exception $e) {
@@ -277,7 +278,7 @@ class Manage extends Process
         $combo_action = [];
 
         $settings = My::settings();
-        $theme    = dcCore::app()->blog->settings->system->theme;
+        $theme    = App::blog()->settings()->system->theme;
 
         // Init
         $smg_writable = false;
@@ -299,7 +300,7 @@ class Manage extends Process
 
         // Get theme Infos
         dcCore::app()->themes = new dcThemes();
-        dcCore::app()->themes->loadModules(dcCore::app()->blog->themes_path, null);
+        dcCore::app()->themes->loadModules(App::blog()->themesPath(), null);
         $theme_define = dcCore::app()->themes->getDefine($theme);
 
         // Get smilies code
@@ -340,7 +341,7 @@ class Manage extends Process
         $head = Page::jsLoad('js/jquery/jquery-ui.custom.js') .
         Page::jsLoad('js/jquery/jquery.ui.touch-punch.js') .
         Page::jsJson('smilies', [
-            'smilies_base_url'     => dcCore::app()->blog->host . $smilies_editor->smilies_base_url,
+            'smilies_base_url'     => App::blog()->host() . $smilies_editor->smilies_base_url,
             'confirm_image_delete' => sprintf(__('Are you sure you want to remove these %s ?'), 'images'),
         ]) .
         My::jsLoad('_smilies.js') .
@@ -350,8 +351,8 @@ class Manage extends Process
 
         echo Page::breadcrumb(
             [
-                Html::escapeHTML(dcCore::app()->blog->name) => '',
-                __('Smilies Editor')                        => '',
+                Html::escapeHTML(App::blog()->name()) => '',
+                __('Smilies Editor')                  => '',
             ]
         );
         echo Notices::getNotices();
@@ -427,7 +428,7 @@ class Manage extends Process
                 echo
                 '<td class="minimal status">' . form::checkbox(['select[]'], $k) . '</td>' .
                 '<td class="minimal">' . form::field(['code[]','c' . $k], 20, 255, Html::escapeHTML($v['code']), '', '', $disabled) . '</td>' .
-                //'<noscript><td class="minimal smiley"><img src="'.dcCore::app()->blog->host.$o->smilies_base_url.$v['name'].'" alt="'.$v['code'].'" /></td></noscript>'.
+                //'<noscript><td class="minimal smiley"><img src="'.App::blog()->host().$o->smilies_base_url.$v['name'].'" alt="'.$v['code'].'" /></td></noscript>'.
                 '<td class="nowrap status">' . form::combo(['name[]','n' . $k], $smileys_combo, $v['name'], 'emote', '', $disabled) . $status . '</td>' .
                 '</tr>';
             }
@@ -512,7 +513,7 @@ class Manage extends Process
 
                 echo '<p>';
                 foreach ($smilies_editor->images_list as $k => $v) {
-                    echo    '<img src="' . dcCore::app()->blog->host . $v['url'] . '" alt="' . $v['name'] . '" title="' . $v['name'] . '" />&nbsp;';
+                    echo    '<img src="' . App::blog()->host() . $v['url'] . '" alt="' . $v['name'] . '" title="' . $v['name'] . '" />&nbsp;';
                 }
                 echo '</p>';
 

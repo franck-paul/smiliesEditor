@@ -16,6 +16,8 @@ namespace Dotclear\Plugin\smiliesEditor;
 
 use context;
 use dcCore;
+use Dotclear\App;
+use Dotclear\Core\Frontend\Ctx;
 use Dotclear\Helper\Html\Html;
 
 class FrontendBehaviors
@@ -24,11 +26,11 @@ class FrontendBehaviors
     {
         $settings = My::settings();
 
-        $use_smilies      = (bool) dcCore::app()->blog->settings->system->use_smilies;
+        $use_smilies      = (bool) App::blog()->settings()->system->use_smilies;
         $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
 
         if ($smilies_bar_flag && $use_smilies) {
-            $js = Html::stripHostURL(dcCore::app()->blog->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
+            $js = Html::stripHostURL(App::blog()->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
             echo "\n" . '<script type="text/javascript" src="' . $js . '"></script>' . "\n";
         }
 
@@ -39,7 +41,7 @@ class FrontendBehaviors
     {
         $settings = My::settings();
 
-        $use_smilies      = (bool) dcCore::app()->blog->settings->system->use_smilies;
+        $use_smilies      = (bool) App::blog()->settings()->system->use_smilies;
         $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
         $public_text      = $settings->smilies_public_text;
 
@@ -69,7 +71,9 @@ class FrontendBehaviors
 
     public static function publicBeforeCommentPreview(): string
     {
-        dcCore::app()->public->smilies                 = context::getSmilies(dcCore::app()->blog);
+        if (!isset(App::frontend()->smilies)) {
+            App::frontend()->smilies = Ctx::getSmilies(App::blog());
+        }
         dcCore::app()->ctx->comment_preview['content'] = context::addSmilies(dcCore::app()->ctx->comment_preview['content']);
 
         return '';

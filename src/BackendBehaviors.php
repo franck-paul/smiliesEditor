@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\smiliesEditor;
 
 use dcCore;
+use Dotclear\App;
 use Dotclear\Database\Cursor;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Html;
@@ -70,7 +71,7 @@ class BackendBehaviors
             if ($smiley['onSmilebar']) {
                 $res .= 'jsToolBar.prototype.elements.smilieseditor_s' . $id . " = {type: 'button', title: '" . Html::escapeJS($smiley['code']) . "', fn:{} }; " .
                     //"jsToolBar.prototype.elements.smilieseditor_s".$id.".context = 'post'; ".
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".icon = '" . Html::escapeJS(dcCore::app()->blog->host . $sE->smilies_base_url . $smiley['name']) . "'; " .
+                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".icon = '" . Html::escapeJS(App::blog()->host() . $sE->smilies_base_url . $smiley['name']) . "'; " .
                     'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wiki = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
                     'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.xhtml = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
                     'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wysiwyg = function() {
