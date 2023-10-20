@@ -490,10 +490,10 @@ class Manage extends Process
             '<h3>' . __('New image') . '</h3>' .
             '<p>' .
             My::parsedHiddenFields([
-                'MAX_FILE_SIZE' => (string) DC_MAX_UPLOAD_SIZE,
+                'MAX_FILE_SIZE' => (string) App::config()->maxUploadSize(),
             ]) .
             '<label>' . __('Choose a file:') .
-            ' (' . sprintf(__('Maximum size %s'), Files::size((int) DC_MAX_UPLOAD_SIZE)) . ')' .
+            ' (' . sprintf(__('Maximum size %s'), Files::size((int) App::config()->maxUploadSize())) . ')' .
             '<input type="file" name="upfile" size="20" />' .
             '</label></p>' .
             '<p><input type="submit" value="' . __('Send') . '" />' .
