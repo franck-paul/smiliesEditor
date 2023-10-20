@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
-use dcCore;
 use Dotclear\App;
 use Dotclear\Database\Cursor;
 use Dotclear\Database\MetaRecord;
@@ -24,21 +23,21 @@ use form;
 class BackendBehaviors
 {
     /**
-     * @param      dcCore|Metarecord   $args   The arguments
+     * @param      null|Metarecord   $rs   The arguments
      *
      * @return     string
      */
-    public static function adminUserForm($args): string
+    public static function adminUserForm(?MetaRecord $rs): string
     {
         /**
          * @var        array<string, mixed>
          */
         $opts = [];
 
-        if ($args instanceof dcCore) {
-            $opts = $args->auth->getOptions();
-        } elseif ($args instanceof MetaRecord) {
-            $opts = $args->options();
+        if (is_null($rs)) {
+            $opts = App::auth()->getOptions();
+        } elseif ($rs instanceof MetaRecord) {
+            $opts = $rs->options();
         }
 
         $value = array_key_exists('smilies_editor_admin', $opts) ? $opts['smilies_editor_admin'] : false;

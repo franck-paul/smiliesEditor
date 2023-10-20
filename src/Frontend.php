@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Process;
 
 class Frontend extends Process
@@ -30,16 +30,16 @@ class Frontend extends Process
             return false;
         }
 
-        dcCore::app()->addBehavior('publicFooterContent', FrontendBehaviors::publicFooterContent(...));
-        dcCore::app()->addBehavior('publicCommentFormAfterContent', FrontendBehaviors::publicFormAfterContent(...));
-        dcCore::app()->addBehavior('publicAnswerFormAfterContent', FrontendBehaviors::publicFormAfterContent(...));
-        dcCore::app()->addBehavior('publicEditFormAfter', FrontendBehaviors::publicFormAfterContent(...));
-        dcCore::app()->addBehavior('publicEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
-        dcCore::app()->addBehavior('publicEditEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
+        App::behavior()->addBehavior('publicFooterContent', FrontendBehaviors::publicFooterContent(...));
+        App::behavior()->addBehavior('publicCommentFormAfterContent', FrontendBehaviors::publicFormAfterContent(...));
+        App::behavior()->addBehavior('publicAnswerFormAfterContent', FrontendBehaviors::publicFormAfterContent(...));
+        App::behavior()->addBehavior('publicEditFormAfter', FrontendBehaviors::publicFormAfterContent(...));
+        App::behavior()->addBehavior('publicEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
+        App::behavior()->addBehavior('publicEditEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
 
         $settings = My::settings();
         if ($settings->smilies_preview_flag) {
-            dcCore::app()->addBehavior('publicBeforeCommentPreview', FrontendBehaviors::publicBeforeCommentPreview(...));
+            App::behavior()->addBehavior('publicBeforeCommentPreview', FrontendBehaviors::publicBeforeCommentPreview(...));
         }
 
         return true;

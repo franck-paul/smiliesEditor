@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Menus;
 use Dotclear\Core\Process;
 
@@ -36,16 +36,16 @@ class Backend extends Process
 
         My::addBackendMenuItem(Menus::MENU_BLOG);
 
-        dcCore::app()->addBehavior('adminPreferencesForm', BackendBehaviors::adminUserForm(...));
-        dcCore::app()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));
-        dcCore::app()->addBehavior('adminBeforeUserCreate', BackendBehaviors::setSmiliesDisplay(...));
-        dcCore::app()->addBehavior('adminBeforeUserUpdate', BackendBehaviors::setSmiliesDisplay(...));
+        App::behavior()->addBehavior('adminPreferencesFormV2', BackendBehaviors::adminUserForm(...));
+        App::behavior()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));
+        App::behavior()->addBehavior('adminBeforeUserCreate', BackendBehaviors::setSmiliesDisplay(...));
+        App::behavior()->addBehavior('adminBeforeUserUpdate', BackendBehaviors::setSmiliesDisplay(...));
 
-        if (dcCore::app()->auth->getOption('smilies_editor_admin')) {
-            dcCore::app()->addBehavior('adminPostHeaders', BackendBehaviors::adminPostHeaders(...));
-            dcCore::app()->addBehavior('adminPageHeaders', BackendBehaviors::adminPostHeaders(...));
-            dcCore::app()->addBehavior('adminRelatedHeaders', BackendBehaviors::adminPostHeaders(...));
-            dcCore::app()->addBehavior('adminDashboardHeaders', BackendBehaviors::adminPostHeaders(...));
+        if (App::auth()->getOption('smilies_editor_admin')) {
+            App::behavior()->addBehavior('adminPostHeaders', BackendBehaviors::adminPostHeaders(...));
+            App::behavior()->addBehavior('adminPageHeaders', BackendBehaviors::adminPostHeaders(...));
+            App::behavior()->addBehavior('adminRelatedHeaders', BackendBehaviors::adminPostHeaders(...));
+            App::behavior()->addBehavior('adminDashboardHeaders', BackendBehaviors::adminPostHeaders(...));
         }
 
         return true;

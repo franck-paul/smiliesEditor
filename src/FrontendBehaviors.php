@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
-use context;
-use dcCore;
 use Dotclear\App;
 use Dotclear\Core\Frontend\Ctx;
 use Dotclear\Helper\Html\Html;
@@ -74,7 +72,7 @@ class FrontendBehaviors
         if (!isset(App::frontend()->smilies)) {
             App::frontend()->smilies = Ctx::getSmilies(App::blog());
         }
-        dcCore::app()->ctx->comment_preview['content'] = context::addSmilies(dcCore::app()->ctx->comment_preview['content']);
+        App::frontend()->context()->comment_preview['content'] = Ctx::addSmilies(App::frontend()->context()->comment_preview['content']);
 
         return '';
     }
