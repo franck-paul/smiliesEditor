@@ -27,7 +27,7 @@ class BackendBehaviors
      *
      * @return     string
      */
-    public static function adminUserForm(?MetaRecord $rs): string
+    public static function adminUserForm(?MetaRecord $rs = null): string
     {
         /**
          * @var        array<string, mixed>
