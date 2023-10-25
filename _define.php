@@ -14,7 +14,7 @@ $this->registerModule(
     'smiliesEditor',
     'Smilies Editor',
     'Osku and contributors',
-    '3.0',
+    '4.0',
     [
         'requires'    => [['core', '2.28']],
         'permissions' => 'My',
