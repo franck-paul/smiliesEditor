@@ -24,11 +24,13 @@ use Exception;
 class CoreHelper
 {
     protected string $smilies_dir       = 'smilies';
+
     protected string $smilies_file_name = 'smilies.txt';
 
     protected string $smilies_desc_file ;
 
     public string $smilies_base_url;
+
     public string $smilies_path;
 
     /**
@@ -112,16 +114,18 @@ class CoreHelper
                 if (!$fp) {
                     throw new Exception('tocatch');
                 }
+
                 $fcontent = '';
 
                 foreach ($smilies as $smiley) {
                     $fcontent .= $smiley['code'] . "\t\t" . $smiley['name'] . "\r\n";
                 }
+
                 fwrite($fp, $fcontent);
                 fclose($fp);
 
                 return true;
-            } catch (Exception $e) {
+            } catch (Exception) {
                 throw new Exception(sprintf(__('Unable to write file %s. Please check your theme file and folders permissions.'), $this->smilies_desc_file));
             }
         }
@@ -144,6 +148,7 @@ class CoreHelper
                 $config[] = $smiley['code'];
             }
         }
+
         My::settings()->put('smilies_toolbar', serialize($config), 'string');
 
         App::blog()->triggerBlog();
@@ -211,7 +216,7 @@ class CoreHelper
                     $this->images_list[$v->basename] = ['name' => $v->basename,  'url' => $v->file_url];
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new Exception(sprintf(__('Active theme does not have required subfolder <code>%s</code>.'), $this->smilies_dir));
         }
     }
@@ -220,7 +225,7 @@ class CoreHelper
     {
         try {
             Files::makeDir(App::blog()->themesPath() . '/' . App::blog()->settings()->system->theme . '/' . Path::clean($this->smilies_dir));
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new Exception(sprintf(__('Unable to create subfolder %s in your theme. Please check your folder permissions.'), $this->smilies_dir));
         }
     }
@@ -241,6 +246,7 @@ class CoreHelper
             $define     = $this->smilies_file_name;
             $has_define = $zip->hasFile($define);
         }
+
         if ($zip->isEmpty()) {
             $zip->close();
             unlink($zip_file);

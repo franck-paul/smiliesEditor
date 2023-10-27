@@ -72,6 +72,7 @@ class FrontendBehaviors
         if (!isset(App::frontend()->smilies)) {
             App::frontend()->smilies = Ctx::getSmilies(App::blog());
         }
+
         App::frontend()->context()->comment_preview['content'] = Ctx::addSmilies(App::frontend()->context()->comment_preview['content']);
 
         return '';

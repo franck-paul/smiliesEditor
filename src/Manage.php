@@ -67,8 +67,8 @@ class Manage extends Process
 
         if (!empty($_POST['saveconfig'])) {
             try {
-                $show     = (empty($_POST['smilies_bar_flag'])) ? false : true;
-                $preview  = (empty($_POST['smilies_preview_flag'])) ? false : true;
+                $show     = !empty($_POST['smilies_bar_flag']);
+                $preview  = !empty($_POST['smilies_preview_flag']);
                 $formtext = (empty($_POST['smilies_public_text'])) ? __('Smilies') : $_POST['smilies_public_text'];
 
                 $settings->put('smilies_bar_flag', $show, App::blogWorkspace()::NS_BOOL, 'Show smilies toolbar');
@@ -92,7 +92,7 @@ class Manage extends Process
                     $smileys_list = array_merge($smileys_list, [$v['name'] => $v['name']]);
                 }
 
-                if (!empty($smilies_editor->images_list)) {
+                if ($smilies_editor->images_list !== []) {
                     foreach ($smilies_editor->images_list as $v) {
                         if (!array_key_exists($v['name'], $smileys_list)) {
                             try {
@@ -140,7 +140,7 @@ class Manage extends Process
                 $order = explode(',', $_POST['smilies_order']);
             }
 
-            if (!empty($order)) {
+            if ($order !== []) {
                 try {
                     /**
                      * @var array<int, array<string, mixed>>
@@ -149,6 +149,7 @@ class Manage extends Process
                     foreach ($order as $v) {
                         $new_smilies[(int) $v] = $smilies[(int) $v];
                     }
+
                     $smilies_editor->setSmilies($new_smilies);
                     Notices::addSuccessNotice(__('Order of smilies has been successfully changed.'));
                     My::redirect();
@@ -272,13 +273,12 @@ class Manage extends Process
             return;
         }
 
-        $combo_action = [];
-
         $settings = My::settings();
         $theme    = App::blog()->settings()->system->theme;
 
         // Init
         $smg_writable = false;
+        $combo_action = [];
         if (App::auth()->isSuperAdmin() && $theme != 'blowup') {
             $combo_action[__('Definition')] = [
                 __('update') => 'update',
@@ -307,8 +307,8 @@ class Manage extends Process
         try {
             $smilies_editor->getFiles();
             $smg_writable = $smilies_editor->filemanager->writable();
-        } catch (Exception $e) {
-            Notices::addWarningNotice($e->getMessage());
+        } catch (Exception $exception) {
+            Notices::addWarningNotice($exception->getMessage());
         }
 
         // Create array of used smilies filename
@@ -319,14 +319,14 @@ class Manage extends Process
 
         // Create the combo of all images available in directory
         $smileys_combo = [];
-        if (!empty($smilies_editor->images_list)) {
+        if ($smilies_editor->images_list !== []) {
             foreach ($smilies_editor->images_list as $k => $v) {
                 $smileys_combo = array_merge($smileys_combo, [$v['name'] => $v['name']]);
             }
         }
 
-        if (!empty($smilies_editor->images_list)) {
-            $images_all = $smilies_editor->images_list;
+        $images_all = $smilies_editor->images_list;
+        if ($smilies_editor->images_list !== []) {
             foreach ($smilies_editor->images_list as $k => $v) {
                 if (array_key_exists($v['name'], $smileys_list)) {
                     unset($smilies_editor->images_list[$k]);
@@ -357,14 +357,13 @@ class Manage extends Process
         echo
         '<p>' . sprintf(__('Your <a href="%s">current theme</a> on this blog is "%s".'), App::backend()->url()->get('admin.blog.theme'), '<strong>' . Html::escapeHTML($theme_define->get('name')) . '</strong>') . '</p>';
 
-        if (empty($smilies)) {
+        if ($smilies === []) {
             if (!empty($smilies_editor->filemanager)) {
                 echo '<br /><p class="form-note info ">' . __('No defined smiley yet.') . '</p><br />';
             }
         } else {
             echo
-            '<div class="clear" id="smilies_options">' .
-            '<form action="' . App::backend()->getPageURL() . '" method="post" id="form_smilies_options">' .
+            '<div class="clear" id="smilies_options"><form action="' . App::backend()->getPageURL() . '" method="post" id="form_smilies_options">' .
                     '<h3>' . __('Configuration') . '</h3>' .
                         '<div class="two-cols">' .
                             '<p class="col">' .
@@ -415,12 +414,14 @@ class Manage extends Process
                     $line   = 'offline';
                     $status = '<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" src="images/check-wrn.png" />';
                 }
+
                 $disabled = (App::auth()->isSuperAdmin() && $theme != 'blowup') ? false : true;
                 echo
                 '<tr class="line ' . $line . '" id="l_' . ($k) . '">';
                 if (App::auth()->isSuperAdmin() && $theme != 'blowup') {
                     echo  '<td class="handle minimal">' . form::field(['order[' . $k . ']'], 2, 5, $k, 'position') . '</td>' ;
                 }
+
                 echo
                 '<td class="minimal status">' . form::checkbox(['select[]'], $k) . '</td>' .
                 '<td class="minimal">' . form::field(['code[]','c' . $k], 20, 255, Html::escapeHTML($v['code']), '', '', $disabled) . '</td>' .
@@ -453,7 +454,7 @@ class Manage extends Process
 
         echo '<br /><br /><div class="three-cols">';
 
-        if (empty($images_all)) {
+        if ($images_all === []) {
             if (empty($smilies_editor->filemanager)) {
                 echo '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="dir_form"><p>' .
                 My::parsedHiddenFields([
@@ -461,27 +462,24 @@ class Manage extends Process
                 ]) .
                 '<input type="submit" name="create_dir" value="' . __('Initialize') . '" /></p></form></div>';
             }
-        } else {
-            if (App::auth()->isSuperAdmin() && $theme != 'blowup') {
-                echo
-                    '<div class="col">' .
-                    '<form action="' . App::backend()->getPageURL() . '" method="post" id="add-smiley-form">' .
-                    '<h3>' . __('New smiley') . '</h3>' .
-                    '<p><label for="smilepic" class="classic required">
+        } elseif (App::auth()->isSuperAdmin() && $theme != 'blowup') {
+            echo
+                '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="add-smiley-form">' .
+                '<h3>' . __('New smiley') . '</h3>' .
+                '<p><label for="smilepic" class="classic required">
                     <abbr title="' . __('Required field') . '">*</abbr>
                     ' . __('Image:') . ' ' .
-                    form::combo('smilepic', $smileys_combo) . '</label></p>' .
+                form::combo('smilepic', $smileys_combo) . '</label></p>' .
 
-                    '<p><label for="smilecode" class="classic required">
+                '<p><label for="smilecode" class="classic required">
                     <abbr title="' . __('Required field') . '">*</abbr>
                     ' . __('Code:') . ' ' .
-                    form::field('smilecode', 20, 255) . '</label>' .
-                    My::parsedHiddenFields([
-                        'p' => 'smiliesEditor',
-                    ]) .
-                    '&nbsp; <input type="submit" name="add_message" value="' . __('Create') . '" /></p>' .
-                    '</form></div>';
-            }
+                form::field('smilecode', 20, 255) . '</label>' .
+                My::parsedHiddenFields([
+                    'p' => 'smiliesEditor',
+                ]) .
+                '&nbsp; <input type="submit" name="add_message" value="' . __('Create') . '" /></p>' .
+                '</form></div>';
         }
 
         if ($smg_writable && App::auth()->isSuperAdmin() && $theme != 'blowup') {
@@ -502,31 +500,28 @@ class Manage extends Process
             '</form></div>';
         }
 
-        if (!empty($images_all) && App::auth()->isSuperAdmin() && $theme != 'blowup') {
-            if (!empty($smilies_editor->images_list)) {
-                echo '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="del_form">' .
-                '<h3>' . __('Unused smilies') . '</h3>';
+        if ($images_all !== [] && App::auth()->isSuperAdmin() && $theme != 'blowup' && $smilies_editor->images_list !== []) {
+            echo '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="del_form">' .
+            '<h3>' . __('Unused smilies') . '</h3>';
+            echo '<p>';
+            foreach ($smilies_editor->images_list as $k => $v) {
+                echo    '<img src="' . App::blog()->host() . $v['url'] . '" alt="' . $v['name'] . '" title="' . $v['name'] . '" />&nbsp;';
+            }
 
-                echo '<p>';
-                foreach ($smilies_editor->images_list as $k => $v) {
-                    echo    '<img src="' . App::blog()->host() . $v['url'] . '" alt="' . $v['name'] . '" title="' . $v['name'] . '" />&nbsp;';
-                }
-                echo '</p>';
-
-                echo
-                '<p>' .
-                My::parsedHiddenFields([
-                    'p' => 'smiliesEditor',
-                ]) .
-                '<input type="submit" name="rm_unused_img"
+            echo '</p>';
+            echo
+            '<p>' .
+            My::parsedHiddenFields([
+                'p' => 'smiliesEditor',
+            ]) .
+            '<input type="submit" name="rm_unused_img"
         value="' . __('Delete') . '"
         /></p></form></div>';
-            }
         }
 
         echo '</div>';
 
-        if (!empty($images_all)) {
+        if ($images_all !== []) {
             echo  '<p class="zip-dl clear"><a href="' . Html::escapeURL(App::backend()->getPageURL()) . '&amp;zipdl=1">' .
                 __('Download the smilies directory as a zip file') . '</a></p>';
         }

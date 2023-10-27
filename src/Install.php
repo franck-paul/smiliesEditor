@@ -33,12 +33,10 @@ class Install extends Process
 
         try {
             $old_version = App::version()->getVersion(My::id());
-            if (version_compare((string) $old_version, '2.0', '<')) {
-                // Rename settings namespace
-                if (App::blog()->settings()->exists('smilieseditor')) {
-                    App::blog()->settings()->delWorkspace(My::id());
-                    App::blog()->settings()->renWorkspace('smilieseditor', My::id());
-                }
+            // Rename settings namespace
+            if (version_compare((string) $old_version, '2.0', '<') && App::blog()->settings()->exists('smilieseditor')) {
+                App::blog()->settings()->delWorkspace(My::id());
+                App::blog()->settings()->renWorkspace('smilieseditor', My::id());
             }
 
             // Init
@@ -48,8 +46,8 @@ class Install extends Process
             $settings->put('smilies_preview_flag', false, App::blogWorkspace()::NS_BOOL, 'Show smilies on preview', false, true);
             $settings->put('smilies_toolbar', '', App::blogWorkspace()::NS_STRING, 'Smilies displayed in toolbar', false, true);
             $settings->put('smilies_public_text', __('Smilies'), App::blogWorkspace()::NS_STRING, 'Smilies displayed in toolbar', false, true);
-        } catch (Exception $e) {
-            App::error()->add($e->getMessage());
+        } catch (Exception $exception) {
+            App::error()->add($exception->getMessage());
         }
 
         return true;

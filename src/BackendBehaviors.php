@@ -79,8 +79,7 @@ class BackendBehaviors
                     };\n";
             }
         }
-        $res .= "</script>\n";
 
-        return $res;
+        return $res . "</script>\n";
     }
 }
