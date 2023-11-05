@@ -23,7 +23,7 @@ use Exception;
 
 class CoreHelper
 {
-    protected string $smilies_dir       = 'smilies';
+    protected string $smilies_dir = 'smilies';
 
     protected string $smilies_file_name = 'smilies.txt';
 
@@ -63,7 +63,7 @@ class CoreHelper
         $this->smilies_desc_file = App::blog()->themesPath() . '/' . $sys->theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
         $this->smilies_base_url  = $sys->themes_url . '/' . $sys->theme . '/' . $this->smilies_dir . '/';
         $this->smilies_path      = App::blog()->themesPath() . '/' . $sys->theme . '/' . $this->smilies_dir;
-        if (($config = unserialize((string) $smi->smilies_toolbar)) !== false) {
+        if (($config = unserialize((string) $smi->smilies_toolbar)) !== false && is_array($config)) {
             $this->smilies_config = $config;
         }
     }
@@ -84,7 +84,7 @@ class CoreHelper
                         $this->smilies_list[] = [
                             'code'       => $m[1],
                             'name'       => $m[2],
-                            'onSmilebar' => !is_array($this->smilies_config) || in_array($m[1], $this->smilies_config)];
+                            'onSmilebar' => in_array($m[1], $this->smilies_config)];
                     }
                 }
             }
