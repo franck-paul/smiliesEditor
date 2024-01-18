@@ -1,3 +1,6 @@
+/*global $, dotclear */
+'use strict';
+
 $(() => {
   const smilies = dotclear.getData('smilies');
   dotclear.smilies_base_url = smilies.smilies_base_url;
@@ -22,20 +25,7 @@ $(() => {
       });
   });
 
-  $('#smilies-list').sortable({
-    cursor: 'move',
-  });
-  $('#smilies-list tr')
-    .on('mouseenter', function () {
-      $(this).css({
-        cursor: 'move',
-      });
-    })
-    .on('mouseleave', function () {
-      $(this).css({
-        cursor: 'auto',
-      });
-    });
+  $('#smilies-list').sortable();
   $('#saveorder').on('click', () => {
     const order = [];
     $('#smilies-list tr td input.position').each(function () {

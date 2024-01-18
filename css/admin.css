@@ -10,9 +10,15 @@ a.add {
 img.smiley {
   vertical-align: middle;
 }
-/*tr.offline {background-color : #f4f4ef;}*/
+tr.line select.emote {
+  width: inherit;
+}
 tr td.smiley {
   text-align: center;
+}
+img.emote {
+  width: 24px;
+  height: 24px;
 }
 #smilepic,
 #smilepic option,

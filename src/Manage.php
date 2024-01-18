@@ -359,7 +359,7 @@ class Manage extends Process
 
         if ($smilies === []) {
             if (!empty($smilies_editor->filemanager)) {
-                echo '<br /><p class="form-note info ">' . __('No defined smiley yet.') . '</p><br />';
+                echo '<br><p class="form-note info ">' . __('No defined smiley yet.') . '</p><br>';
             }
         } else {
             echo
@@ -379,7 +379,7 @@ class Manage extends Process
                                 '<label class="required classic" for="smilies_preview_flag">' . __('Comments form label:') . '</label>&nbsp;&nbsp;' .
                                 form::field('smilies_public_text', 50, 255, Html::escapeHTML($smilies_public_text)) .
                             '</p>' .
-                            '<br /><p class="clear form-note">' .
+                            '<br><p class="clear form-note">' .
                                 sprintf(
                                     __('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'),
                                     App::backend()->url()->get('admin.blog.pref') . '#params.use_smilies'
@@ -387,7 +387,7 @@ class Manage extends Process
                             '</p>' .
                             '<p class="clear">' .
                                 My::parsedHiddenFields() .
-                                '<input type="submit" name="saveconfig" value="' . __('Save') . '" />' .
+                                '<input type="submit" name="saveconfig" value="' . __('Save') . '">' .
                             '</p>' .
                         '</div>' .
             '</form></div>';
@@ -409,10 +409,10 @@ class Manage extends Process
             foreach ($smilies as $k => $v) {
                 if ($v['onSmilebar']) {
                     $line   = '';
-                    $status = '<img alt="' . __('displayed') . '" title="' . __('displayed') . '" src="images/check-on.png" />';
+                    $status = '&nbsp;<img alt="' . __('displayed') . '" title="' . __('displayed') . '" src="images/check-on.png">';
                 } else {
                     $line   = 'offline';
-                    $status = '<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" src="images/check-wrn.png" />';
+                    $status = '&nbsp;<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" src="images/check-wrn.png">';
                 }
 
                 $disabled = (App::auth()->isSuperAdmin() && $theme != 'blowup') ? false : true;
@@ -425,7 +425,7 @@ class Manage extends Process
                 echo
                 '<td class="minimal status">' . form::checkbox(['select[]'], $k) . '</td>' .
                 '<td class="minimal">' . form::field(['code[]','c' . $k], 20, 255, Html::escapeHTML($v['code']), '', '', $disabled) . '</td>' .
-                //'<noscript><td class="minimal smiley"><img src="'.App::blog()->host().$o->smilies_base_url.$v['name'].'" alt="'.$v['code'].'" /></td></noscript>'.
+                //'<noscript><td class="minimal smiley"><img src="'.App::blog()->host().$o->smilies_base_url.$v['name'].'" alt="'.$v['code'].'"></td></noscript>'.
                 '<td class="nowrap status">' . form::combo(['name[]','n' . $k], $smileys_combo, $v['name'], 'emote', '', $disabled) . $status . '</td>' .
                 '</tr>';
             }
@@ -441,18 +441,18 @@ class Manage extends Process
                     'smilies_order' => '',
                     'p'             => 'smiliesEditor',
                 ]) .
-                '<input type="submit" value="' . __('Ok') . '" /></p>';
+                '<input type="submit" value="' . __('Ok') . '"></p>';
 
             if (App::auth()->isSuperAdmin() && $theme != 'blowup') {
                 echo '<p><input type="submit" name="saveorder" id="saveorder"
         value="' . __('Save order') . '"
-        /></p>';
+       ></p>';
             }
 
             echo '</div></form>';
         }
 
-        echo '<br /><br /><div class="three-cols">';
+        echo '<br><br><div class="three-cols">';
 
         if ($images_all === []) {
             if (empty($smilies_editor->filemanager)) {
@@ -460,7 +460,7 @@ class Manage extends Process
                 My::parsedHiddenFields([
                     'p' => 'smiliesEditor',
                 ]) .
-                '<input type="submit" name="create_dir" value="' . __('Initialize') . '" /></p></form></div>';
+                '<input type="submit" name="create_dir" value="' . __('Initialize') . '"></p></form></div>';
             }
         } elseif (App::auth()->isSuperAdmin() && $theme != 'blowup') {
             echo
@@ -478,7 +478,7 @@ class Manage extends Process
                 My::parsedHiddenFields([
                     'p' => 'smiliesEditor',
                 ]) .
-                '&nbsp; <input type="submit" name="add_message" value="' . __('Create') . '" /></p>' .
+                '&nbsp; <input type="submit" name="add_message" value="' . __('Create') . '"></p>' .
                 '</form></div>';
         }
 
@@ -492,9 +492,9 @@ class Manage extends Process
             ]) .
             '<label>' . __('Choose a file:') .
             ' (' . sprintf(__('Maximum size %s'), Files::size((int) App::config()->maxUploadSize())) . ')' .
-            '<input type="file" name="upfile" size="20" />' .
+            '<input type="file" name="upfile" size="20">' .
             '</label></p>' .
-            '<p><input type="submit" value="' . __('Send') . '" />' .
+            '<p><input type="submit" value="' . __('Send') . '">' .
             form::hidden(['d'], null) . '</p>' .
             //'<p class="form-note">'.__('Please take care to publish media that you own and that are not protected by copyright.').'</p>'.
             '</form></div>';
@@ -505,7 +505,7 @@ class Manage extends Process
             '<h3>' . __('Unused smilies') . '</h3>';
             echo '<p>';
             foreach ($smilies_editor->images_list as $k => $v) {
-                echo    '<img src="' . App::blog()->host() . $v['url'] . '" alt="' . $v['name'] . '" title="' . $v['name'] . '" />&nbsp;';
+                echo    '<img src="' . App::blog()->host() . $v['url'] . '" alt="' . $v['name'] . '" class="emote" title="' . $v['name'] . '">&nbsp;';
             }
 
             echo '</p>';
@@ -516,7 +516,7 @@ class Manage extends Process
             ]) .
             '<input type="submit" name="rm_unused_img"
         value="' . __('Delete') . '"
-        /></p></form></div>';
+       ></p></form></div>';
         }
 
         echo '</div>';

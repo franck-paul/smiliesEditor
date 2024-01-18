@@ -210,10 +210,12 @@ class CoreHelper
             $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
             $this->filemanager->getDir();
             foreach ($this->filemanager->getFiles() as $v) {
-                $this->files_list[$v->basename] = [$v->basename => 'name',  $v->file_url => 'url', $v->type => 'type'];
+                if ($v->basename !== $this->smilies_file_name) {
+                    $this->files_list[$v->basename] = [$v->basename => 'name',  $v->file_url => 'url', $v->type => 'type'];
 
-                if (preg_match('/^(image)(.+)$/', (string) $v->type) !== false) {
-                    $this->images_list[$v->basename] = ['name' => $v->basename,  'url' => $v->file_url];
+                    if (preg_match('/^(image)(.+)$/', (string) $v->type) !== false) {
+                        $this->images_list[$v->basename] = ['name' => $v->basename,  'url' => $v->file_url];
+                    }
                 }
             }
         } catch (Exception) {

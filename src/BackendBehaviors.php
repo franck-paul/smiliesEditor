@@ -15,10 +15,15 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\smiliesEditor;
 
 use Dotclear\App;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Database\Cursor;
 use Dotclear\Database\MetaRecord;
+use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Fieldset;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Html;
-use form;
 
 class BackendBehaviors
 {
@@ -40,46 +45,45 @@ class BackendBehaviors
             $opts = $rs->options();
         }
 
-        $value = array_key_exists('smilies_editor_admin', $opts) ? $opts['smilies_editor_admin'] : false;
+        $value = $opts['smilies_editor_admin'] ?? false;
 
-        echo
-        '<fieldset><legend>' . __('Toolbar') . '</legend>' .
-        '<p><label class="classic">' .
-        form::checkbox('smilies_editor_admin', '1', $value) . __('Display smilies on toolbar') .
-        '</label></p></fieldset>';
+        echo (new Fieldset('smilies_editor'))
+            ->legend(new Legend(__('Toolbar')))
+            ->items([
+                (new Para())->items([
+                    (new Checkbox('smilies_editor_admin', $value))
+                        ->label(new Label(__('Display smilies on toolbar'), Label::INSIDE_TEXT_AFTER)),
+                ]),
+            ])
+        ->render();
 
         return '';
     }
 
-    public static function setSmiliesDisplay(Cursor $cur, ?string $user_id = null): string
+    public static function setSmiliesDisplay(Cursor $cur): string
     {
-        if (!is_null($user_id) && isset($_POST['smilies_editor_admin'])) {
-            $cur->user_options['smilies_editor_admin'] = $_POST['smilies_editor_admin'];
-        }
+        $cur->user_options['smilies_editor_admin'] = !empty($_POST['smilies_editor_admin']);
 
         return '';
     }
 
     public static function adminPostHeaders(): string
     {
-        $res = '<script type="text/javascript">' . "\n";
-
-        $sE      = new CoreHelper();
-        $smilies = $sE->getSmilies();
+        $smiliesEditor = new CoreHelper();
+        $smilies       = $smiliesEditor->getSmilies();
+        $buttons       = [];
         foreach ($smilies as $id => $smiley) {
             if ($smiley['onSmilebar']) {
-                $res .= 'jsToolBar.prototype.elements.smilieseditor_s' . $id . " = {type: 'button', title: '" . Html::escapeJS($smiley['code']) . "', fn:{} }; " .
-                    //"jsToolBar.prototype.elements.smilieseditor_s".$id.".context = 'post'; ".
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".icon = '" . Html::escapeJS(App::blog()->host() . $sE->smilies_base_url . $smiley['name']) . "'; " .
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wiki = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.xhtml = function() { this.encloseSelection('" . Html::escapeJS($smiley['code']) . "  ',''); }; " .
-                    'jsToolBar.prototype.elements.smilieseditor_s' . $id . ".fn.wysiwyg = function() {
-                        smiley = document.createTextNode('" . Html::escapeJS($smiley['code']) . " ');
-                        this.insertNode(smiley);
-                    };\n";
+                $buttons[] = [
+                    'id'   => $id,
+                    'code' => Html::escapeJS($smiley['code']),
+                    'icon' => Html::escapeJS(App::blog()->host() . $smiliesEditor->smilies_base_url . $smiley['name']),
+                ];
             }
         }
 
-        return $res . "</script>\n";
+        return
+        Page::jsJson('smilieseditor', $buttons) .
+        My::jsLoad('legacy_smilies.js');
     }
 }

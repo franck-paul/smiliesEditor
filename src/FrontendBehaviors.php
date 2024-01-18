@@ -56,7 +56,7 @@ class FrontendBehaviors
             if ($smiley['onSmilebar']) {
                 $res .= ' <img class="smiley" src="' . $sE->smilies_base_url . $smiley['name'] . '" alt="' .
                 Html::escapeHTML($smiley['code']) . '" title="' . Html::escapeHTML($smiley['code']) . '" onclick="javascript:InsertSmiley(\'c_content\', \'' .
-                Html::escapeHTML($smiley['code']) . ' \');" style="cursor:pointer;" />';
+                Html::escapeHTML($smiley['code']) . ' \');" style="cursor:pointer;">';
             }
         }
 

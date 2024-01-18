@@ -37,6 +37,7 @@ class Backend extends Process
 
         App::behavior()->addBehavior('adminPreferencesFormV2', BackendBehaviors::adminUserForm(...));
         App::behavior()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));
+        App::behavior()->addBehavior('adminBeforeUserOptionsUpdate', BackendBehaviors::setSmiliesDisplay(...));
         App::behavior()->addBehavior('adminBeforeUserCreate', BackendBehaviors::setSmiliesDisplay(...));
         App::behavior()->addBehavior('adminBeforeUserUpdate', BackendBehaviors::setSmiliesDisplay(...));
 
