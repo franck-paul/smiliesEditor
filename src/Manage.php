@@ -273,13 +273,14 @@ class Manage extends Process
             return;
         }
 
-        $settings = My::settings();
-        $theme    = App::blog()->settings()->system->theme;
+        $settings    = My::settings();
+        $theme       = App::blog()->settings()->system->theme;
+        $distributed = in_array($theme, explode(',', App::config()->distributedThemes()));
 
         // Init
         $smg_writable = false;
         $combo_action = [];
-        if (App::auth()->isSuperAdmin() && $theme != 'blowup') {
+        if (App::auth()->isSuperAdmin() && !$distributed) {
             $combo_action[__('Definition')] = [
                 __('update') => 'update',
                 __('delete') => 'clear',
@@ -392,7 +393,7 @@ class Manage extends Process
                         '</div>' .
             '</form></div>';
 
-            $colspan = (App::auth()->isSuperAdmin() && $theme != 'blowup') ? 3 : 2;
+            $colspan = (App::auth()->isSuperAdmin() && !$distributed) ? 3 : 2;
             echo
                 '<form action="' . App::backend()->getPageURL() . '" method="post" id="smilies-form">' .
                 '<h3>' . __('Smilies set') . '</h3>' .
@@ -415,10 +416,10 @@ class Manage extends Process
                     $status = '&nbsp;<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" src="images/check-wrn.png">';
                 }
 
-                $disabled = (App::auth()->isSuperAdmin() && $theme != 'blowup') ? false : true;
+                $disabled = (App::auth()->isSuperAdmin() && !$distributed) ? false : true;
                 echo
                 '<tr class="line ' . $line . '" id="l_' . ($k) . '">';
-                if (App::auth()->isSuperAdmin() && $theme != 'blowup') {
+                if (App::auth()->isSuperAdmin() && !$distributed) {
                     echo  '<td class="handle minimal">' . form::field(['order[' . $k . ']'], 2, 5, $k, 'position') . '</td>' ;
                 }
 
@@ -443,7 +444,7 @@ class Manage extends Process
                 ]) .
                 '<input type="submit" value="' . __('Ok') . '"></p>';
 
-            if (App::auth()->isSuperAdmin() && $theme != 'blowup') {
+            if (App::auth()->isSuperAdmin() && !$distributed) {
                 echo '<p><input type="submit" name="saveorder" id="saveorder"
         value="' . __('Save order') . '"
        ></p>';
@@ -462,7 +463,7 @@ class Manage extends Process
                 ]) .
                 '<input type="submit" name="create_dir" value="' . __('Initialize') . '"></p></form></div>';
             }
-        } elseif (App::auth()->isSuperAdmin() && $theme != 'blowup') {
+        } elseif (App::auth()->isSuperAdmin() && !$distributed) {
             echo
                 '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="add-smiley-form">' .
                 '<h3>' . __('New smiley') . '</h3>' .
@@ -482,7 +483,7 @@ class Manage extends Process
                 '</form></div>';
         }
 
-        if ($smg_writable && App::auth()->isSuperAdmin() && $theme != 'blowup') {
+        if ($smg_writable && App::auth()->isSuperAdmin() && !$distributed) {
             echo
             '<div class="col"><form id="upl-smile-form" action="' . Html::escapeURL(App::backend()->getPageURL()) . '" method="post" enctype="multipart/form-data">' .
             '<h3>' . __('New image') . '</h3>' .
@@ -500,7 +501,7 @@ class Manage extends Process
             '</form></div>';
         }
 
-        if ($images_all !== [] && App::auth()->isSuperAdmin() && $theme != 'blowup' && $smilies_editor->images_list !== []) {
+        if ($images_all !== [] && App::auth()->isSuperAdmin() && !$distributed && $smilies_editor->images_list !== []) {
             echo '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="del_form">' .
             '<h3>' . __('Unused smilies') . '</h3>';
             echo '<p>';
