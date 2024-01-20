@@ -241,7 +241,7 @@ class CoreHelper
 
         $define = '';
         $target = dirname($zip_file);
-        if ($zip_root_dir != false) {
+        if ($zip_root_dir !== false) {
             $define     = $zip_root_dir . '/' . $this->smilies_file_name;
             $has_define = $zip->hasFile($define);
         } else {
