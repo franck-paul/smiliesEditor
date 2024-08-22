@@ -4,9 +4,6 @@ option[selected='selected'] {
 select {
   background-color: #fff !important;
 }
-a.add {
-  background: inherit url(images/plus.png) top left;
-}
 img.smiley {
   vertical-align: middle;
 }

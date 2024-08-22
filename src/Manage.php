@@ -410,10 +410,10 @@ class Manage extends Process
             foreach ($smilies as $k => $v) {
                 if ($v['onSmilebar']) {
                     $line   = '';
-                    $status = '&nbsp;<img alt="' . __('displayed') . '" title="' . __('displayed') . '" src="images/check-on.png">';
+                    $status = '&nbsp;<img alt="' . __('displayed') . '" title="' . __('displayed') . '" class="mark mark-published" src="images/published.svg">';
                 } else {
                     $line   = 'offline';
-                    $status = '&nbsp;<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" src="images/check-wrn.png">';
+                    $status = '&nbsp;<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" class="mark mark-unpublished" src="images/unpublished.svg">';
                 }
 
                 $disabled = (App::auth()->isSuperAdmin() && !$distributed) ? false : true;
@@ -426,7 +426,6 @@ class Manage extends Process
                 echo
                 '<td class="minimal status">' . form::checkbox(['select[]'], $k) . '</td>' .
                 '<td class="minimal">' . form::field(['code[]','c' . $k], 20, 255, Html::escapeHTML($v['code']), '', '', $disabled) . '</td>' .
-                //'<noscript><td class="minimal smiley"><img src="'.App::blog()->host().$o->smilies_base_url.$v['name'].'" alt="'.$v['code'].'"></td></noscript>'.
                 '<td class="nowrap status">' . form::combo(['name[]','n' . $k], $smileys_combo, $v['name'], 'emote', '', $disabled) . $status . '</td>' .
                 '</tr>';
             }
@@ -515,9 +514,7 @@ class Manage extends Process
             My::parsedHiddenFields([
                 'p' => 'smiliesEditor',
             ]) .
-            '<input type="submit" name="rm_unused_img"
-        value="' . __('Delete') . '"
-       ></p></form></div>';
+            '<input type="submit" name="rm_unused_img" value="' . __('Delete') . '"></p></form></div>';
         }
 
         echo '</div>';

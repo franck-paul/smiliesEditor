@@ -16,12 +16,12 @@ $this->registerModule(
     'Osku and contributors',
     '4.2',
     [
-        'requires'    => [['core', '2.28']],
+        'requires'    => [['core', '2.30']],
         'permissions' => 'My',
         'type'        => 'plugin',
 
         'details'    => 'https://plugins.dotaddict.org/dc2/details/smiliesEditor',
         'support'    => 'https://github.com/franck-paul/smiliesEditor',
-        'repository' => 'https://raw.githubusercontent.com/franck-paul/smiliesEditor/master/dcstore.xml',
+        'repository' => 'https://raw.githubusercontent.com/franck-paul/smiliesEditor/main/dcstore.xml',
     ]
 );
