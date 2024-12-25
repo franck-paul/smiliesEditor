@@ -1,7 +1,7 @@
 /*global $, dotclear */
 'use strict';
 
-$(() => {
+dotclear.ready(() => {
   const smilies = dotclear.getData('smilies');
   dotclear.smilies_base_url = smilies.smilies_base_url;
   dotclear.msg.confirm_image_delete = smilies.confirm_image_delete;

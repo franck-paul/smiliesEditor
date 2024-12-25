@@ -1,7 +1,7 @@
 /*global $ */
 'use strict';
 
-$(() => {
+dotclear.ready(() => {
   const target = $('#c_content').parent();
   $('p.smilies').insertBefore(target);
 });

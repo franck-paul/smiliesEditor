@@ -1,7 +1,7 @@
 /*global $, dotclear, jsToolBar */
 'use strict';
 
-$(() => {
+dotclear.ready(() => {
   // Get buttons (id, code, icon)
   const buttons = dotclear.getData('smilieseditor');
   for (const button in buttons) {
