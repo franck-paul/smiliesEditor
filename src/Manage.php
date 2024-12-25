@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief smiliesEditor, a plugin for Dotclear 2
  *
@@ -137,7 +138,7 @@ class Manage extends Process
                 asort($order);
                 $order = array_keys($order);
             } elseif (!empty($_POST['smilies_order'])) {
-                $order = explode(',', $_POST['smilies_order']);
+                $order = explode(',', (string) $_POST['smilies_order']);
             }
 
             if ($order !== []) {
@@ -275,7 +276,7 @@ class Manage extends Process
 
         $settings    = My::settings();
         $theme       = App::blog()->settings()->system->theme;
-        $distributed = in_array($theme, explode(',', App::config()->distributedThemes()));
+        $distributed = in_array($theme, explode(',', (string) App::config()->distributedThemes()));
 
         // Init
         $smg_writable = false;
