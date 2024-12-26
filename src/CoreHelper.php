@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief smiliesEditor, a plugin for Dotclear 2
  *
@@ -99,8 +100,6 @@ class CoreHelper
      * @param      array<int, array<string, mixed>>      $smilies  The smilies
      *
      * @throws     Exception
-     *
-     * @return     bool
      */
     public function setSmilies(array $smilies): bool
     {
@@ -137,8 +136,6 @@ class CoreHelper
      * Sets the configuration.
      *
      * @param      array<int, array<string, mixed>>      $smilies  The smilies
-     *
-     * @return     bool
      */
     public function setConfig(array $smilies): bool
     {
@@ -163,10 +160,8 @@ class CoreHelper
      * @param      string     $name   The filename
      *
      * @throws     Exception
-     *
-     * @return     string|void
      */
-    public function uploadSmile(string $tmp, string $name)
+    public function uploadSmile(string $tmp, string $name): ?string
     {
         $name = Files::tidyFileName($name);
 
@@ -196,7 +191,7 @@ class CoreHelper
                 throw $e;
             }
 
-            return;
+            return null;
         }
 
         $this->filemanager->removeItem($name);

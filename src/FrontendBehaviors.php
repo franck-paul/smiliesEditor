@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief smiliesEditor, a plugin for Dotclear 2
  *
@@ -60,7 +61,7 @@ class FrontendBehaviors
             }
         }
 
-        if ($res != '') {
+        if ($res !== '') {
             echo sprintf($field, $res);
         }
 

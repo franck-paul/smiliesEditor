@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief smiliesEditor, a plugin for Dotclear 2
  *
@@ -29,8 +30,6 @@ class BackendBehaviors
 {
     /**
      * @param      null|Metarecord   $rs   The arguments
-     *
-     * @return     string
      */
     public static function adminUserForm(?MetaRecord $rs = null): string
     {

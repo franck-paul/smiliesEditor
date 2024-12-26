@@ -93,14 +93,12 @@ class Manage extends Process
                     $smileys_list = array_merge($smileys_list, [$v['name'] => $v['name']]);
                 }
 
-                if ($smilies_editor->images_list !== []) {
-                    foreach ($smilies_editor->images_list as $v) {
-                        if (!array_key_exists($v['name'], $smileys_list)) {
-                            try {
-                                $smilies_editor->filemanager->removeItem($v['name']);
-                            } catch (Exception $e) {
-                                App::error()->add($e->getMessage());
-                            }
+                foreach ($smilies_editor->images_list as $v) {
+                    if (!array_key_exists($v['name'], $smileys_list)) {
+                        try {
+                            $smilies_editor->filemanager->removeItem($v['name']);
+                        } catch (Exception $e) {
+                            App::error()->add($e->getMessage());
                         }
                     }
                 }
@@ -231,7 +229,7 @@ class Manage extends Process
 
         if (!empty($_POST['smilecode']) && !empty($_POST['smilepic'])) {
             try {
-                $count = (int) count($smilies);
+                $count = count($smilies);
 
                 $smilies[$count]['code'] = preg_replace('/[\s]+/', '', (string) $_POST['smilecode']);
                 $smilies[$count]['name'] = $_POST['smilepic'];
@@ -321,18 +319,14 @@ class Manage extends Process
 
         // Create the combo of all images available in directory
         $smileys_combo = [];
-        if ($smilies_editor->images_list !== []) {
-            foreach ($smilies_editor->images_list as $k => $v) {
-                $smileys_combo = array_merge($smileys_combo, [$v['name'] => $v['name']]);
-            }
+        foreach ($smilies_editor->images_list as $k => $v) {
+            $smileys_combo = array_merge($smileys_combo, [$v['name'] => $v['name']]);
         }
 
         $images_all = $smilies_editor->images_list;
-        if ($smilies_editor->images_list !== []) {
-            foreach ($smilies_editor->images_list as $k => $v) {
-                if (array_key_exists($v['name'], $smileys_list)) {
-                    unset($smilies_editor->images_list[$k]);
-                }
+        foreach ($smilies_editor->images_list as $k => $v) {
+            if (array_key_exists($v['name'], $smileys_list)) {
+                unset($smilies_editor->images_list[$k]);
             }
         }
 
@@ -505,7 +499,7 @@ class Manage extends Process
             echo '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="del_form">' .
             '<h3>' . __('Unused smilies') . '</h3>';
             echo '<p>';
-            foreach ($smilies_editor->images_list as $k => $v) {
+            foreach ($smilies_editor->images_list as $v) {
                 echo    '<img src="' . App::blog()->host() . $v['url'] . '" alt="' . $v['name'] . '" class="emote" title="' . $v['name'] . '">&nbsp;';
             }
 
