@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @brief smiliesEditor, a plugin for Dotclear 2
  *

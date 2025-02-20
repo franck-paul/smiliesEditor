@@ -21,13 +21,35 @@ use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\File\Zip\Zip;
+use Dotclear\Helper\Html\Form\Checkbox;
+use Dotclear\Helper\Html\Form\Div;
+use Dotclear\Helper\Html\Form\Fieldset;
+use Dotclear\Helper\Html\Form\File;
+use Dotclear\Helper\Html\Form\Form;
+use Dotclear\Helper\Html\Form\Hidden;
+use Dotclear\Helper\Html\Form\Img;
+use Dotclear\Helper\Html\Form\Input;
+use Dotclear\Helper\Html\Form\Label;
+use Dotclear\Helper\Html\Form\Legend;
+use Dotclear\Helper\Html\Form\Link;
+use Dotclear\Helper\Html\Form\None;
+use Dotclear\Helper\Html\Form\Note;
+use Dotclear\Helper\Html\Form\Optgroup;
+use Dotclear\Helper\Html\Form\Option;
+use Dotclear\Helper\Html\Form\Para;
+use Dotclear\Helper\Html\Form\Select;
+use Dotclear\Helper\Html\Form\Set;
+use Dotclear\Helper\Html\Form\Submit;
+use Dotclear\Helper\Html\Form\Table;
+use Dotclear\Helper\Html\Form\Tbody;
+use Dotclear\Helper\Html\Form\Td;
+use Dotclear\Helper\Html\Form\Text;
+use Dotclear\Helper\Html\Form\Th;
+use Dotclear\Helper\Html\Form\Thead;
+use Dotclear\Helper\Html\Form\Tr;
 use Dotclear\Helper\Html\Html;
 use Exception;
-use form;
 
-/**
- * @todo switch Helper/Html/Form/...
- */
 class Manage extends Process
 {
     /**
@@ -275,24 +297,26 @@ class Manage extends Process
             return;
         }
 
-        $settings    = My::settings();
-        $theme       = App::blog()->settings()->system->theme;
-        $distributed = in_array($theme, explode(',', (string) App::config()->distributedThemes()));
+        $settings = My::settings();
+        $theme    = App::blog()->settings()->system->theme;
+        $ordering = App::auth()->isSuperAdmin() && !in_array($theme, explode(',', (string) App::config()->distributedThemes()));
 
         // Init
         $smg_writable = false;
-        $combo_action = [];
-        if (App::auth()->isSuperAdmin() && !$distributed) {
-            $combo_action[__('Definition')] = [
-                __('update') => 'update',
-                __('delete') => 'clear',
-            ];
-        }
 
-        $combo_action[__('Toolbar')] = [
-            __('display') => 'display',
-            __('hide')    => 'hide',
-        ];
+        $actions   = [];
+        $actions[] = (new Optgroup(__('Toolbar')))
+            ->items([
+                (new Option(__('display'), 'display')),
+                (new Option(__('hide'), 'hide')),
+            ]);
+        if ($ordering) {
+            $actions[] = (new Optgroup(__('Definition')))
+                ->items([
+                    (new Option(__('update'), 'update')),
+                    (new Option(__('delete'), 'clear')),
+                ]);
+        }
 
         $smilies_bar_flag     = (bool) $settings->smilies_bar_flag;
         $smilies_preview_flag = (bool) $settings->smilies_preview_flag;
@@ -353,174 +377,322 @@ class Manage extends Process
         echo Notices::getNotices();
 
         // Form
-        echo
-        '<p>' . sprintf(__('Your <a href="%s">current theme</a> on this blog is "%s".'), App::backend()->url()->get('admin.blog.theme'), '<strong>' . Html::escapeHTML($theme_define->get('name')) . '</strong>') . '</p>';
+        $items = [];
+
+        // Mandatory fields note
+        $items[] = (new Note())
+            ->class('form-note')
+            ->text(sprintf(__('Fields preceded by %s are mandatory.'), (new Text('span', '*'))->class('required')->render()));
+
+        // Current theme information
+        $items[] = (new Note())
+            ->text(sprintf(
+                __('Your <a href="%s">current theme</a> on this blog is "%s".'),
+                App::backend()->url()->get('admin.blog.theme'),
+                (new Text('strong', Html::escapeHTML($theme_define->get('name'))))->render()
+            ));
 
         if ($smilies === []) {
             if (!empty($smilies_editor->filemanager)) {
-                echo '<br><p class="form-note info ">' . __('No defined smiley yet.') . '</p><br>';
+                $items[] = (new Note())
+                    ->class(['form-note', 'info'])
+                    ->text(__('No defined smiley yet.'));
             }
         } else {
-            echo
-            '<div class="clear" id="smilies_options"><form action="' . App::backend()->getPageURL() . '" method="post" id="form_smilies_options">' .
-                    '<h3>' . __('Configuration') . '</h3>' .
-                        '<div class="two-cols">' .
-                            '<p class="col">' .
-                                form::checkbox('smilies_bar_flag', '1', $smilies_bar_flag) .
-                                '<label class="classic" for="smilies_bar_flag">' . __('Show toolbar smilies in comments form') . '</label>' .
-                            '</p>' .
-                            '<p class="col">' .
-                                form::checkbox('smilies_preview_flag', '1', $smilies_preview_flag) .
-                                '<label class=" classic" for="smilies_preview_flag">' . __('Show images on preview') . '</label>' .
-                            '</p>' .
+            // Configuration (may go in secondary tab in future)
+            $items[] = (new Div('smilies_options'))
+                ->class('clear')
+                ->items([
+                    (new Form('form_smilies_options'))
+                        ->method('post')
+                        ->action(App::backend()->getPageURL())
+                        ->fields([
+                            (new Fieldset())
+                                ->legend(new Legend(__('Configuration')))
+                                ->fields([
+                                    (new Para())
+                                        ->items([
+                                            (new Checkbox('smilies_bar_flag', $smilies_bar_flag))
+                                                ->value(1)
+                                                ->label(new Label(__('Show toolbar smilies in comments form'), Label::IL_FT)),
+                                        ]),
+                                    (new Para())
+                                        ->items([
+                                            (new Checkbox('smilies_preview_flag', $smilies_preview_flag))
+                                                ->value(1)
+                                                ->label(new Label(__('Show images on preview'), Label::IL_FT)),
+                                        ]),
+                                    (new Para())
+                                        ->items([
+                                            (new Input('smilies_public_text'))
+                                                ->size(50)
+                                                ->maxlength(255)
+                                                ->default(Html::escapeHTML($smilies_public_text))
+                                                ->label((new Label((new Text('span', '*'))->render() . __('Comments form label:'), Label::IL_TF))
+                                                    ->class('required')),
+                                        ]),
+                                    (new Note())
+                                        ->class('form-note')
+                                        ->text(sprintf(
+                                            __('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'),
+                                            App::backend()->url()->get('admin.blog.pref') . '#params.use_smilies'
+                                        )),
+                                    (new Para())
+                                        ->class('form-buttons')
+                                        ->items([
+                                            ... My::hiddenFields(),
+                                            (new Submit('saveconfig', __('Save'))),
+                                        ]),
 
-                            '<p class="clear">' .
-                                '<label class="required classic" for="smilies_preview_flag">' . __('Comments form label:') . '</label>&nbsp;&nbsp;' .
-                                form::field('smilies_public_text', 50, 255, Html::escapeHTML($smilies_public_text)) .
-                            '</p>' .
-                            '<br><p class="clear form-note">' .
-                                sprintf(
-                                    __('Don\'t forget to <a href="%s">display smilies</a> on your blog configuration.'),
-                                    App::backend()->url()->get('admin.blog.pref') . '#params.use_smilies'
-                                ) .
-                            '</p>' .
-                            '<p class="clear">' .
-                                My::parsedHiddenFields() .
-                                '<input type="submit" name="saveconfig" value="' . __('Save') . '">' .
-                            '</p>' .
-                        '</div>' .
-            '</form></div>';
+                                ]),
+                        ]),
+                ]);
 
-            $colspan = (App::auth()->isSuperAdmin() && !$distributed) ? 3 : 2;
-            echo
-                '<form action="' . App::backend()->getPageURL() . '" method="post" id="smilies-form">' .
-                '<h3>' . __('Smilies set') . '</h3>' .
-                '<table class="maximal dragable">' .
-                '<thead>' .
-                '<tr>' .
-                '<th colspan="' . $colspan . '">' . __('Code') . '</th>' .
-                '<th>' . __('Image') . '</th>' .
-                //'<noscript><th>'.__('Filename').'</th></noscript>'.
-                '</tr>' .
-                '</thead>' .
+            $rows = function () use ($smilies, $smileys_combo, $ordering) {
+                foreach ($smilies as $key => $value) {
+                    if ($value['onSmilebar']) {
+                        $class  = '';
+                        $status = (new Img('images/published.svg'))
+                            ->alt(__('displayed'))
+                            ->title(__('displayed'))
+                            ->class(['mark', 'mark-published']);
+                    } else {
+                        $class  = 'offline';
+                        $status = (new Img('images/unpublished.svg'))
+                            ->alt(__('undisplayed'))
+                            ->title(__('undisplayed'))
+                            ->class(['mark', 'mark-unpublished']);
+                    }
 
-            '<tbody id="smilies-list">';
-            foreach ($smilies as $k => $v) {
-                if ($v['onSmilebar']) {
-                    $line   = '';
-                    $status = '&nbsp;<img alt="' . __('displayed') . '" title="' . __('displayed') . '" class="mark mark-published" src="images/published.svg">';
-                } else {
-                    $line   = 'offline';
-                    $status = '&nbsp;<img alt="' . __('undisplayed') . '" title="' . __('undisplayed') . '" class="mark mark-unpublished" src="images/unpublished.svg">';
+                    yield (new Tr('l_' . $key))
+                        ->class(['line', $class])
+                        ->cols([
+                            $ordering ?
+                            (new Td())
+                                ->class(['handle', 'minimal'])
+                                ->items([
+                                    (new Input(['order[' . $key . ']']))
+                                        ->size(2)
+                                        ->maxlength(5)
+                                        ->default($key)
+                                        ->class('position'),
+                                ]) :
+                            (new None()),
+                            (new Td())
+                                ->class(['minimal', 'status'])
+                                ->items([
+                                    (new Checkbox(['select[]']))
+                                        ->value($key),
+                                ]),
+                            (new Td())
+                                ->class('minimal')
+                                ->items([
+                                    (new Input(['code[]','c' . $key]))
+                                        ->size(20)
+                                        ->maxlength(255)
+                                        ->default(Html::escapeHTML($value['code']))
+                                        ->disabled(!$ordering),
+                                ]),
+                            (new Td())
+                                ->class(['nowrap', 'status'])
+                                ->items([
+                                    (new Select(['name[]','n' . $key]))
+                                        ->class('emote')
+                                        ->items($smileys_combo)
+                                        ->default($value['name'])
+                                        ->disabled(!$ordering),
+                                    $status,
+                                ]),
+                        ]);
                 }
+            };
 
-                $disabled = (App::auth()->isSuperAdmin() && !$distributed) ? false : true;
-                echo
-                '<tr class="line ' . $line . '" id="l_' . ($k) . '">';
-                if (App::auth()->isSuperAdmin() && !$distributed) {
-                    echo  '<td class="handle minimal">' . form::field(['order[' . $k . ']'], 2, 5, $k, 'position') . '</td>' ;
-                }
-
-                echo
-                '<td class="minimal status">' . form::checkbox(['select[]'], $k) . '</td>' .
-                '<td class="minimal">' . form::field(['code[]','c' . $k], 20, 255, Html::escapeHTML($v['code']), '', '', $disabled) . '</td>' .
-                '<td class="nowrap status">' . form::combo(['name[]','n' . $k], $smileys_combo, $v['name'], 'emote', '', $disabled) . $status . '</td>' .
-                '</tr>';
-            }
-
-            echo '</tbody></table>';
-
-            echo '<div class="two-cols">
-        <p class="col checkboxes-helpers"></p>';
-
-            echo    '<p class="col right">' . __('Selected smilies action:') . ' ' .
-                form::combo('actionsmilies', $combo_action) .
-                My::parsedHiddenFields([
-                    'smilies_order' => '',
-                    'p'             => 'smiliesEditor',
-                ]) .
-                '<input type="submit" value="' . __('Ok') . '"></p>';
-
-            if (App::auth()->isSuperAdmin() && !$distributed) {
-                echo '<p><input type="submit" name="saveorder" id="saveorder"
-        value="' . __('Save order') . '"
-       ></p>';
-            }
-
-            echo '</div></form>';
+            $items[] = (new Form('smilies-form'))
+                ->method('post')
+                ->action(App::backend()->getPageURL())
+                ->fields([
+                    (new Text('h3', __('Smilies set'))),
+                    (new Table())
+                        ->class(['maximal', 'dragable'])
+                        ->thead((new Thead())
+                            ->rows([
+                                (new Tr())
+                                    ->cols([
+                                        (new Th())
+                                            ->colspan($ordering ? 3 : 2)
+                                            ->text(__('Code')),
+                                        (new Th())
+                                            ->text(__('Image')),
+                                    ]),
+                            ]))
+                        ->tbody((new Tbody('smilies-list'))
+                            ->rows([
+                                ... $rows(),
+                            ])),
+                    (new Div())
+                        ->class('two-cols')
+                        ->items([
+                            (new Para())
+                                ->class(['col', 'checkboxes-helpers']),
+                            (new para())
+                                ->class(['col', 'right', 'form-buttons'])
+                                ->items([
+                                    (new Select('actionsmilies'))
+                                        ->items($actions)
+                                        ->label(new Label(__('Selected smilies action:'), Label::IL_TF)),
+                                    (new Submit('actionsmilies_submit', __('Ok'))),
+                                    ... My::hiddenFields(),
+                                ]),
+                            (new Para())
+                                ->items([
+                                    $ordering ?
+                                    (new Submit('saveorder', __('Save order'))) :
+                                    (new None()),
+                                ]),
+                        ]),
+                ]);
         }
 
-        echo '<br><br><div class="three-cols">';
-
+        $forms = [];
         if ($images_all === []) {
             if (empty($smilies_editor->filemanager)) {
-                echo '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="dir_form"><p>' .
-                My::parsedHiddenFields([
-                    'p' => 'smiliesEditor',
-                ]) .
-                '<input type="submit" name="create_dir" value="' . __('Initialize') . '"></p></form></div>';
+                $forms[] = (new Div())
+                    ->class('col')
+                    ->items([
+                        (new Form('dir_form'))
+                            ->method('post')
+                            ->action(App::backend()->getPageURL())
+                            ->fields([
+                                (new Para())
+                                    ->items([
+                                        ... My::hiddenFields(),
+                                        (new Submit('create_dir', __('Initialize'))),
+                                    ]),
+                            ]),
+                    ]);
             }
-        } elseif (App::auth()->isSuperAdmin() && !$distributed) {
-            echo
-                '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="add-smiley-form">' .
-                '<h3>' . __('New smiley') . '</h3>' .
-                '<p><label for="smilepic" class="classic required">
-                    <abbr title="' . __('Required field') . '">*</abbr>
-                    ' . __('Image:') . ' ' .
-                form::combo('smilepic', $smileys_combo) . '</label></p>' .
-
-                '<p><label for="smilecode" class="classic required">
-                    <abbr title="' . __('Required field') . '">*</abbr>
-                    ' . __('Code:') . ' ' .
-                form::field('smilecode', 20, 255) . '</label>' .
-                My::parsedHiddenFields([
-                    'p' => 'smiliesEditor',
-                ]) .
-                '&nbsp; <input type="submit" name="add_message" value="' . __('Create') . '"></p>' .
-                '</form></div>';
+        } elseif ($ordering) {
+            $forms[] = (new Div())
+                ->class('col')
+                ->items([
+                    (new Form('add-smiley-form'))
+                        ->method('post')
+                        ->action(App::backend()->getPageURL())
+                        ->fields([
+                            (new Fieldset())
+                                ->legend(new Legend(__('New smiley')))
+                                ->fields([
+                                    (new Para())
+                                        ->items([
+                                            (new Select('smilepic'))
+                                                ->items($smileys_combo)
+                                                ->label((new Label((new Text('span', '*'))->render() . __('Image:'), Label::IL_TF))
+                                                    ->class('required')),
+                                        ]),
+                                    (new Para())
+                                        ->items([
+                                            (new Input('smilecode'))
+                                                ->size(20)
+                                                ->maxlength(255)
+                                                ->label((new Label((new Text('span', '*'))->render() . __('Code:'), Label::IL_TF))
+                                                    ->class('required')),
+                                        ]),
+                                    (new Para())
+                                        ->class('form-buttons')
+                                        ->items([
+                                            ... My::hiddenFields(),
+                                            (new Submit('add_message', __('Create'))),
+                                        ]),
+                                ]),
+                        ]),
+                ]);
         }
 
-        if ($smg_writable && App::auth()->isSuperAdmin() && !$distributed) {
-            echo
-            '<div class="col"><form id="upl-smile-form" action="' . Html::escapeURL(App::backend()->getPageURL()) . '" method="post" enctype="multipart/form-data">' .
-            '<h3>' . __('New image') . '</h3>' .
-            '<p>' .
-            My::parsedHiddenFields([
-                'MAX_FILE_SIZE' => (string) App::config()->maxUploadSize(),
-            ]) .
-            '<label>' . __('Choose a file:') .
-            ' (' . sprintf(__('Maximum size %s'), Files::size((int) App::config()->maxUploadSize())) . ')' .
-            '<input type="file" name="upfile" size="20">' .
-            '</label></p>' .
-            '<p><input type="submit" value="' . __('Send') . '">' .
-            form::hidden(['d'], null) . '</p>' .
-            //'<p class="form-note">'.__('Please take care to publish media that you own and that are not protected by copyright.').'</p>'.
-            '</form></div>';
+        if ($smg_writable && $ordering) {
+            $forms[] = (new Div())
+                ->class('col')
+                ->items([
+                    (new Form('upl-smile-form'))
+                        ->method('post')
+                        ->action(App::backend()->getPageURL())
+                        ->enctype('multipart/form-data')
+                        ->fields([
+                            (new Fieldset())
+                                ->legend(new Legend(__('New image')))
+                                ->fields([
+                                    (new Para())
+                                        ->items([
+                                            (new File('upfile'))
+                                                ->size(20)
+                                                ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size((int) App::config()->maxUploadSize())) . ')', Label::OL_TF)),
+                                        ]),
+                                    (new Para())
+                                        ->class('form-buttons')
+                                        ->items([
+                                            ... My::hiddenFields([
+                                                'MAX_FILE_SIZE' => (string) App::config()->maxUploadSize(),
+                                            ]),
+                                            (new Hidden(['d'], null)),
+                                            (new Submit('upfile-submit', __('Send'))),
+                                        ]),
+                                ]),
+                        ]),
+                ]);
         }
 
-        if ($images_all !== [] && App::auth()->isSuperAdmin() && !$distributed && $smilies_editor->images_list !== []) {
-            echo '<div class="col"><form action="' . App::backend()->getPageURL() . '" method="post" id="del_form">' .
-            '<h3>' . __('Unused smilies') . '</h3>';
-            echo '<p>';
-            foreach ($smilies_editor->images_list as $v) {
-                echo    '<img src="' . App::blog()->host() . $v['url'] . '" alt="' . $v['name'] . '" class="emote" title="' . $v['name'] . '">&nbsp;';
-            }
+        if ($images_all !== [] && $ordering && $smilies_editor->images_list !== []) {
+            $list = function () use ($smilies_editor) {
+                foreach ($smilies_editor->images_list as $value) {
+                    yield (new Img(App::blog()->host() . $value['url']))
+                        ->alt($value['name'])
+                        ->class('emote')
+                        ->title($value['name']);
+                }
+            };
 
-            echo '</p>';
-            echo
-            '<p>' .
-            My::parsedHiddenFields([
-                'p' => 'smiliesEditor',
-            ]) .
-            '<input type="submit" name="rm_unused_img" value="' . __('Delete') . '"></p></form></div>';
+            $forms[] = (new Div())
+                ->class('col')
+                ->items([
+                    (new Form('del_form'))
+                        ->method('post')
+                        ->action(App::backend()->getPageURL())
+                        ->fields([
+                            (new Fieldset())
+                                ->legend(new Legend(__('Unused smilies')))
+                                ->fields([
+                                    (new Para())
+                                        ->separator(' ')
+                                        ->items([
+                                            ... $list(),
+                                        ]),
+                                    (new Para())
+                                        ->class('form-buttons')
+                                        ->items([
+                                            ... My::hiddenFields(),
+                                            (new Submit('rm_unused_img', __('Delete'))),
+                                        ]),
+                                ]),
+                        ]),
+                ]);
         }
 
-        echo '</div>';
+        $items[] = (new Div())
+            ->class('three-cols')
+            ->items($forms);
 
         if ($images_all !== []) {
-            echo  '<p class="zip-dl clear"><a href="' . Html::escapeURL(App::backend()->getPageURL()) . '&amp;zipdl=1">' .
-                __('Download the smilies directory as a zip file') . '</a></p>';
+            $items[] = (new Para())
+                ->class(['zip-dl', 'clear'])
+                ->items([
+                    (new Link())
+                        ->href(App::backend()->getPageURL() . '&zipdl=1')
+                        ->text(__('Download the smilies directory as a zip file')),
+                ]);
         }
+
+        echo (new Set())
+            ->items($items)
+        ->render();
 
         Page::helpBlock('smilieseditor');
 
