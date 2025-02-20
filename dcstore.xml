@@ -1,11 +1,11 @@
 <modules xmlns:da="http://dotaddict.org/da/">
   <module id="smiliesEditor">
     <name>smiliesEditor</name>
-    <version>4.3</version>
+    <version>4.4</version>
     <author>Osku and contributors</author>
     <desc>Smilies Editor</desc>
-    <date>2003-08-13T13:42:00+0100</date>
-    <file>https://github.com/franck-paul/smiliesEditor/releases/download/4.3/plugin-smiliesEditor-4.3.zip</file>
+    <date>2025-02-20T14:28:17+0100</date>
+    <file>https://github.com/franck-paul/smiliesEditor/releases/download/4.4/plugin-smiliesEditor-4.4.zip</file>
     <da:dcmin>2.30</da:dcmin>
     <da:details>https://plugins.dotaddict.org/dc2/details/smiliesEditor</da:details>
     <da:support>https://github.com/franck-paul/smiliesEditor</da:support>
