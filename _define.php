@@ -25,5 +25,6 @@ $this->registerModule(
         'details'    => 'https://plugins.dotaddict.org/dc2/details/smiliesEditor',
         'support'    => 'https://github.com/franck-paul/smiliesEditor',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/smiliesEditor/main/dcstore.xml',
+        'license'    => 'gpl2',
     ]
 );

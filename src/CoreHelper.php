@@ -163,13 +163,17 @@ class CoreHelper
      */
     public function uploadSmile(string $tmp, string $name): ?string
     {
+        if (!isset($this->filemanager)) {
+            $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
+        }
+
         $name = Files::tidyFileName($name);
 
         $file = $this->filemanager->uploadFile($tmp, $name);
 
         $type = Files::getMimeType($name);
 
-        if (($type == 'image/jpeg' || $type == 'image/png')) {
+        if (($type === 'image/jpeg' || $type === 'image/png')) {
             $s = getimagesize($file);
             if ($s === false) {
                 $this->filemanager->removeItem($name);
@@ -182,7 +186,9 @@ class CoreHelper
             }
 
             return $name;
-        } elseif ($type == 'application/zip') {
+        } elseif ($type === 'image/svg+xml') {
+            return $name;
+        } elseif ($type === 'application/zip') {
             try {
                 $this->loadAllSmilies($file);
             } catch (Exception $e) {

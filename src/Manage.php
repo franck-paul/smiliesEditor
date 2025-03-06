@@ -118,6 +118,7 @@ class Manage extends Process
                     $smileys_list = array_merge($smileys_list, [$v['name'] => $v['name']]);
                 }
 
+                $smilies_editor->getFiles();
                 foreach ($smilies_editor->images_list as $v) {
                     if (!array_key_exists($v['name'], $smileys_list)) {
                         try {
