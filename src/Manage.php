@@ -144,7 +144,7 @@ class Manage extends Process
                 Files::uploadStatus($_FILES['upfile']);
                 $file = $smilies_editor->uploadSmile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name']);
                 if ($file) {
-                    Notices::addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), $_GET['upok']));
+                    Notices::addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), Html::escapeHTML($_FILES['upfile']['name'])));
                     My::redirect();
                 } else {
                     Notices::addSuccessNotice(__('A smilies zip package has been successfully installed.'));
