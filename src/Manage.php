@@ -39,6 +39,7 @@ use Dotclear\Helper\Html\Form\Option;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Select;
 use Dotclear\Helper\Html\Form\Set;
+use Dotclear\Helper\Html\Form\Span;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Table;
 use Dotclear\Helper\Html\Form\Tbody;
@@ -326,6 +327,7 @@ class Manage extends Process
         // Get theme Infos
         App::themes()->loadModules(App::blog()->themesPath(), null);
         $theme_define = App::themes()->getDefine($theme);
+        $theme_name   = $theme_define->get('name');
 
         // Get smilies code
         $smilies_editor = new CoreHelper();
@@ -383,14 +385,14 @@ class Manage extends Process
         // Mandatory fields note
         $items[] = (new Note())
             ->class('form-note')
-            ->text(sprintf(__('Fields preceded by %s are mandatory.'), (new Text('span', '*'))->class('required')->render()));
+            ->text(sprintf(__('Fields preceded by %s are mandatory.'), (new Span('*'))->class('required')->render()));
 
         // Current theme information
         $items[] = (new Note())
             ->text(sprintf(
                 __('Your <a href="%s">current theme</a> on this blog is "%s".'),
                 App::backend()->url()->get('admin.blog.theme'),
-                (new Text('strong', Html::escapeHTML($theme_define->get('name'))))->render()
+                (new Text('strong', Html::escapeHTML($theme_name)))->render()
             ));
 
         if ($smilies === []) {
@@ -429,7 +431,7 @@ class Manage extends Process
                                                 ->size(50)
                                                 ->maxlength(255)
                                                 ->default(Html::escapeHTML($smilies_public_text))
-                                                ->label((new Label((new Text('span', '*'))->render() . __('Comments form label:'), Label::IL_TF))
+                                                ->label((new Label((new Span('*'))->render() . __('Comments form label:'), Label::IL_TF))
                                                     ->class('required')),
                                         ]),
                                     (new Note())
@@ -587,7 +589,7 @@ class Manage extends Process
                                         ->items([
                                             (new Select('smilepic'))
                                                 ->items($smileys_combo)
-                                                ->label((new Label((new Text('span', '*'))->render() . __('Image:'), Label::IL_TF))
+                                                ->label((new Label((new Span('*'))->render() . __('Image:'), Label::IL_TF))
                                                     ->class('required')),
                                         ]),
                                     (new Para())
@@ -595,7 +597,7 @@ class Manage extends Process
                                             (new Input('smilecode'))
                                                 ->size(20)
                                                 ->maxlength(255)
-                                                ->label((new Label((new Text('span', '*'))->render() . __('Code:'), Label::IL_TF))
+                                                ->label((new Label((new Span('*'))->render() . __('Code:'), Label::IL_TF))
                                                     ->class('required')),
                                         ]),
                                     (new Para())

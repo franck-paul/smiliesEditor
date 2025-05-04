@@ -50,7 +50,7 @@ class BackendBehaviors
             ->legend(new Legend(__('Toolbar')))
             ->items([
                 (new Para())->items([
-                    (new Checkbox('smilies_editor_admin', $value))
+                    (new Checkbox('smilies_editor_admin', (bool) $value))
                         ->label(new Label(__('Display smilies on toolbar'), Label::INSIDE_TEXT_AFTER)),
                 ]),
             ])
