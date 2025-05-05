@@ -40,6 +40,7 @@ use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Form\Select;
 use Dotclear\Helper\Html\Form\Set;
 use Dotclear\Helper\Html\Form\Span;
+use Dotclear\Helper\Html\Form\Strong;
 use Dotclear\Helper\Html\Form\Submit;
 use Dotclear\Helper\Html\Form\Table;
 use Dotclear\Helper\Html\Form\Tbody;
@@ -392,7 +393,7 @@ class Manage extends Process
             ->text(sprintf(
                 __('Your <a href="%s">current theme</a> on this blog is "%s".'),
                 App::backend()->url()->get('admin.blog.theme'),
-                (new Text('strong', Html::escapeHTML($theme_name)))->render()
+                (new Strong(Html::escapeHTML($theme_name)))->render()
             ));
 
         if ($smilies === []) {
