@@ -70,8 +70,11 @@ class FrontendBehaviors
 
     public static function publicBeforeCommentPreview(): string
     {
-        if (App::frontend()->smilies === null) {
-            App::frontend()->smilies = Ctx::getSmilies(App::blog());
+        if (!isset(App::frontend()->smilies)) {
+            $smilies = Ctx::getSmilies(App::blog());
+            if ($smilies !== false) {
+                App::frontend()->smilies = $smilies;
+            }
         }
 
         App::frontend()->context()->comment_preview['content'] = Ctx::addSmilies(App::frontend()->context()->comment_preview['content']);
