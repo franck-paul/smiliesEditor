@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\smiliesEditor;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Database\Cursor;
 use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Form\Checkbox;
@@ -82,7 +81,7 @@ class BackendBehaviors
         }
 
         return
-        Page::jsJson('smilieseditor', $buttons) .
+        App::backend()->page()->jsJson('smilieseditor', $buttons) .
         My::jsLoad('legacy_smilies.js');
     }
 }

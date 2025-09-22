@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\smiliesEditor;
 
 use Dotclear\App;
-use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\File\Zip\Zip;
 use Dotclear\Helper\Html\Form\Checkbox;
@@ -89,7 +87,7 @@ class Manage
             try {
                 $smilies_editor->createDir();
                 My::redirect();
-                Notices::addSuccessNotice(__('The subfolder has been successfully created'));
+                App::backend()->notices()->addSuccessNotice(__('The subfolder has been successfully created'));
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
@@ -106,7 +104,7 @@ class Manage
                 $settings->put('smilies_public_text', $formtext, App::blogWorkspace()::NS_STRING, 'Smilies displayed in toolbar');
 
                 App::blog()->triggerBlog();
-                Notices::addSuccessNotice(__('Configuration successfully updated.'));
+                App::backend()->notices()->addSuccessNotice(__('Configuration successfully updated.'));
                 My::redirect();
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
@@ -133,7 +131,7 @@ class Manage
                     }
                 }
 
-                Notices::addSuccessNotice(__('Unused images have been successfully removed.'));
+                App::backend()->notices()->addSuccessNotice(__('Unused images have been successfully removed.'));
                 My::redirect([
                     'dircleaned' => 1,
                 ]);
@@ -148,10 +146,10 @@ class Manage
                 Files::uploadStatus($_FILES['upfile']);
                 $file = $smilies_editor->uploadSmile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name']);
                 if ($file) {
-                    Notices::addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), Html::escapeHTML($_FILES['upfile']['name'])));
+                    App::backend()->notices()->addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), Html::escapeHTML($_FILES['upfile']['name'])));
                     My::redirect();
                 } else {
-                    Notices::addSuccessNotice(__('A smilies zip package has been successfully installed.'));
+                    App::backend()->notices()->addSuccessNotice(__('A smilies zip package has been successfully installed.'));
                     My::redirect();
                 }
             } catch (Exception $e) {
@@ -180,7 +178,7 @@ class Manage
                     }
 
                     $smilies_editor->setSmilies($new_smilies);
-                    Notices::addSuccessNotice(__('Order of smilies has been successfully changed.'));
+                    App::backend()->notices()->addSuccessNotice(__('Order of smilies has been successfully changed.'));
                     My::redirect();
                 } catch (Exception $e) {
                     App::error()->add($e->getMessage());
@@ -200,7 +198,7 @@ class Manage
 
                         $smilies_editor->setSmilies($smilies);
                         $smilies_editor->setConfig($smilies);
-                        Notices::addSuccessNotice(__('Smilies has been successfully removed.'));
+                        App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully removed.'));
                         My::redirect();
                     } catch (Exception $e) {
                         App::error()->add($e->getMessage());
@@ -217,7 +215,7 @@ class Manage
 
                         $smilies_editor->setSmilies($smilies);
                         $smilies_editor->setConfig($smilies);
-                        Notices::addSuccessNotice(__('Smilies has been successfully updated.'));
+                        App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully updated.'));
                         My::redirect();
                     } catch (Exception $e) {
                         App::error()->add($e->getMessage());
@@ -232,7 +230,7 @@ class Manage
                         }
 
                         $smilies_editor->setConfig($smilies);
-                        Notices::addSuccessNotice(__('These selected smilies are now displayed on toolbar'));
+                        App::backend()->notices()->addSuccessNotice(__('These selected smilies are now displayed on toolbar'));
                         My::redirect();
                     } catch (Exception $e) {
                         App::error()->add($e->getMessage());
@@ -247,7 +245,7 @@ class Manage
                         }
 
                         $smilies_editor->setConfig($smilies);
-                        Notices::addSuccessNotice(__('These selected smilies are now hidden on toolbar.'));
+                        App::backend()->notices()->addSuccessNotice(__('These selected smilies are now hidden on toolbar.'));
                         My::redirect();
                     } catch (Exception $e) {
                         App::error()->add($e->getMessage());
@@ -265,7 +263,7 @@ class Manage
                 $smilies[$count]['name'] = $_POST['smilepic'];
 
                 $smilies_editor->setSmilies($smilies);
-                Notices::addSuccessNotice(__('A new smiley has been successfully created'));
+                App::backend()->notices()->addSuccessNotice(__('A new smiley has been successfully created'));
                 My::redirect();
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
@@ -341,7 +339,7 @@ class Manage
             $smilies_editor->getFiles();
             $smg_writable = $smilies_editor->filemanager->writable();
         } catch (Exception $exception) {
-            Notices::addWarningNotice($exception->getMessage());
+            App::backend()->notices()->addWarningNotice($exception->getMessage());
         }
 
         // Create array of used smilies filename
@@ -363,24 +361,24 @@ class Manage
             }
         }
 
-        $head = Page::jsLoad('js/jquery/jquery-ui.custom.js') .
-        Page::jsLoad('js/jquery/jquery.ui.touch-punch.js') .
-        Page::jsJson('smilies', [
+        $head = App::backend()->page()->jsLoad('js/jquery/jquery-ui.custom.js') .
+        App::backend()->page()->jsLoad('js/jquery/jquery.ui.touch-punch.js') .
+        App::backend()->page()->jsJson('smilies', [
             'smilies_base_url'     => App::blog()->host() . $smilies_editor->smilies_base_url,
             'confirm_image_delete' => sprintf(__('Are you sure you want to remove these %s ?'), 'images'),
         ]) .
         My::jsLoad('_smilies.js') .
         My::cssLoad('admin.css');
 
-        Page::openModule(My::name(), $head);
+        App::backend()->page()->openModule(My::name(), $head);
 
-        echo Page::breadcrumb(
+        echo App::backend()->page()->breadcrumb(
             [
                 Html::escapeHTML(App::blog()->name()) => '',
                 __('Smilies Editor')                  => '',
             ]
         );
-        echo Notices::getNotices();
+        echo App::backend()->notices()->getNotices();
 
         // Form
         $items = [];
@@ -700,8 +698,8 @@ class Manage
             ->items($items)
         ->render();
 
-        Page::helpBlock('smilieseditor');
+        App::backend()->page()->helpBlock('smilieseditor');
 
-        Page::closeModule();
+        App::backend()->page()->closeModule();
     }
 }
