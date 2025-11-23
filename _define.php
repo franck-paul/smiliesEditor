@@ -15,9 +15,9 @@ $this->registerModule(
     'Smilies Editor',
     'Smilies Editor',
     'Osku and contributors',
-    '7.1',
+    '7.2',
     [
-        'date'        => '2025-09-22T10:25:42+0200',
+        'date'        => '2025-11-23T09:50:47+0100',
         'requires'    => [['core', '2.36']],
         'permissions' => 'My',
         'type'        => 'plugin',
