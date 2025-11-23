@@ -211,7 +211,8 @@ class CoreHelper
             $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
             $this->filemanager->getDir();
             foreach ($this->filemanager->getFiles() as $v) {
-                if ($v->basename !== $this->smilies_file_name) {
+                if ($v->basename && $v->basename !== $this->smilies_file_name) {
+                    // @phpstan-ignore array.invalidKey
                     $this->files_list[$v->basename] = [$v->basename => 'name',  $v->file_url => 'url', $v->type => 'type'];
 
                     if (preg_match('/^(image)(.+)$/', (string) $v->type) !== false) {
