@@ -30,7 +30,7 @@ class FrontendBehaviors
 
         if ($smilies_bar_flag && $use_smilies) {
             $js = Html::stripHostURL(App::blog()->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
-            echo "\n" . '<script type="text/javascript" src="' . $js . '"></script>' . "\n";
+            echo "\n" . '<script src="' . $js . '"></script>' . "\n";
         }
 
         return '';
