@@ -25,7 +25,7 @@ dotclear.ready(() => {
       });
   });
 
-  $('#smilies-list').sortable();
+  $('#smilies-list').sortable({ handle: '.handle' });
   $('#saveorder').on('click', () => {
     const order = [];
     $('#smilies-list tr td input.position').each(function () {
