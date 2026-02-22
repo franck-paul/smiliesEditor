@@ -179,16 +179,22 @@ class CoreHelper
                 $this->filemanager->removeItem($name);
 
                 throw new Exception(__('Unable to get image size.'));
-            } elseif ($s[0] > 24 || $s[1] > 24) {
+            }
+
+            if ($s[0] > 24 || $s[1] > 24) {
                 $this->filemanager->removeItem($name);
 
                 throw new Exception(__('Uploaded image is too big (height or width > 24px).'));
             }
 
             return $name;
-        } elseif ($type === 'image/svg+xml') {
+        }
+
+        if ($type === 'image/svg+xml') {
             return $name;
-        } elseif ($type === 'application/zip') {
+        }
+
+        if ($type === 'application/zip') {
             try {
                 $this->loadAllSmilies($file);
             } catch (Exception $e) {
