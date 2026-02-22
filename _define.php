@@ -22,7 +22,7 @@ $this->registerModule(
         'permissions' => 'My',
         'type'        => 'plugin',
 
-        'details'    => 'https://plugins.dotaddict.org/dc2/details/smiliesEditor',
+        'details'    => 'https://dotclear.org/plugin/detail/smiliesEditor',
         'support'    => 'https://github.com/franck-paul/smiliesEditor',
         'repository' => 'https://raw.githubusercontent.com/franck-paul/smiliesEditor/main/dcstore.xml',
         'license'    => 'gpl2',
