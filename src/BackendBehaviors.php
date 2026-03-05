@@ -43,7 +43,10 @@ class BackendBehaviors
             $opts = $rs->options();
         }
 
-        $value = $opts['smilies_editor_admin'] ?? false;
+        $value = false;
+        if (is_array($opts)) {
+            $value = $opts['smilies_editor_admin'] ?? false;
+        }
 
         echo (new Fieldset('smilies_editor'))
             ->legend(new Legend(__('Toolbar')))
@@ -60,7 +63,9 @@ class BackendBehaviors
 
     public static function setSmiliesDisplay(Cursor $cur): string
     {
-        $cur->user_options['smilies_editor_admin'] = !empty($_POST['smilies_editor_admin']);
+        if (is_array($cur->user_options)) {
+            $cur->user_options['smilies_editor_admin'] = !empty($_POST['smilies_editor_admin']);
+        }
 
         return '';
     }

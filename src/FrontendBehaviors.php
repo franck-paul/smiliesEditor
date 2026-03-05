@@ -42,7 +42,7 @@ class FrontendBehaviors
 
         $use_smilies      = (bool) App::blog()->settings()->system->use_smilies;
         $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
-        $public_text      = $settings->smilies_public_text;
+        $public_text      = is_string($public_text = $settings->smilies_public_text) ? $public_text : '';
 
         if (!$smilies_bar_flag || !$use_smilies) {
             return '';
@@ -77,7 +77,11 @@ class FrontendBehaviors
             }
         }
 
-        App::frontend()->context()->comment_preview['content'] = Ctx::addSmilies(App::frontend()->context()->comment_preview['content']);
+        if (is_array(App::frontend()->context()->comment_preview)) {
+            $content = isset(App::frontend()->context()->comment_preview['content']) && is_string($content = App::frontend()->context()->comment_preview['content']) ? $content : '';
+
+            App::frontend()->context()->comment_preview['content'] = Ctx::addSmilies($content);
+        }
 
         return '';
     }

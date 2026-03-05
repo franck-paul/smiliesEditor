@@ -40,7 +40,7 @@ class CoreHelper
     public array $smilies_config = [];
 
     /**
-     * @var array<int, array<string, mixed>>
+     * @var array<int, array{code: string, name: string, onSmilebar: bool}>
      */
     public array $smilies_list = [];
 
@@ -61,18 +61,31 @@ class CoreHelper
         $smi = My::settings();
         $sys = App::blog()->settings()->system;
 
-        $this->smilies_desc_file = App::blog()->themesPath() . '/' . $sys->theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
-        $this->smilies_base_url  = $sys->themes_url . '/' . $sys->theme . '/' . $this->smilies_dir . '/';
-        $this->smilies_path      = App::blog()->themesPath() . '/' . $sys->theme . '/' . $this->smilies_dir;
-        if (($config = unserialize((string) $smi->smilies_toolbar)) !== false && is_array($config)) {
-            $this->smilies_config = $config;
+        $theme      = is_string($theme = $sys->theme) ? $theme : '';
+        $themes_url = is_string($themes_url = $sys->themes_url) ? $themes_url : '';
+
+        if ($theme !== '') {
+            $this->smilies_desc_file = App::blog()->themesPath() . '/' . $theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
+            $this->smilies_base_url  = $themes_url . '/' . $theme . '/' . $this->smilies_dir . '/';
+            $this->smilies_path      = App::blog()->themesPath() . '/' . $theme . '/' . $this->smilies_dir;
+
+            $smilies_toolbar = is_string($smilies_toolbar = $smi->smilies_toolbar) ? $smilies_toolbar : '';
+            if ($smilies_toolbar !== '') {
+                /**
+                 * @var array<string>
+                 */
+                $config = is_array($config = unserialize($smilies_toolbar)) ? $config : [];
+                if ($config !== []) {
+                    $this->smilies_config = $config;
+                }
+            }
         }
     }
 
     /**
      * Gets the smilies.
      *
-     * @return     array<int, array<string, mixed>>  The smilies.
+     * @return     array<int, array{code: string, name: string, onSmilebar: bool}>  The smilies.
      */
     public function getSmilies(): array
     {
@@ -97,7 +110,7 @@ class CoreHelper
     /**
      * Sets the smilies.
      *
-     * @param      array<int, array<string, mixed>>      $smilies  The smilies
+     * @param      array<int, array{code: string, name: string, onSmilebar?: bool}>      $smilies  The smilies
      *
      * @throws     Exception
      */
@@ -234,7 +247,10 @@ class CoreHelper
     public function createDir(): void
     {
         try {
-            Files::makeDir(App::blog()->themesPath() . '/' . App::blog()->settings()->system->theme . '/' . Path::clean($this->smilies_dir));
+            $theme = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+            if ($theme !== '') {
+                Files::makeDir(App::blog()->themesPath() . '/' . $theme . '/' . Path::clean($this->smilies_dir));
+            }
         } catch (Exception) {
             throw new Exception(sprintf(__('Unable to create subfolder %s in your theme. Please check your folder permissions.'), $this->smilies_dir));
         }

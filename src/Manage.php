@@ -77,11 +77,9 @@ class Manage
         $smilies_editor = new CoreHelper();
 
         /**
-         * @var array<int, array<string, mixed>>
+         * @var array<int, array{code: string, name: string, onSmilebar: bool}>
          */
         $smilies = $smilies_editor->getSmilies();
-
-        $theme = App::blog()->settings()->system->theme;
 
         if (!empty($_POST['create_dir'])) {
             try {
@@ -143,10 +141,14 @@ class Manage
         if (!empty($_FILES['upfile'])) {
             try {
                 $file = null;
-                Files::uploadStatus($_FILES['upfile']);
-                $file = $smilies_editor->uploadSmile($_FILES['upfile']['tmp_name'], $_FILES['upfile']['name']);
+                /**
+                 * @var array{name: string, type: string, size: int, tmp_name: string, error?: int, full_path: string}  $upfile
+                 */
+                $upfile = $_FILES['upfile'];
+                Files::uploadStatus($upfile);
+                $file = $smilies_editor->uploadSmile($upfile['tmp_name'], $upfile['name']);
                 if ($file) {
-                    App::backend()->notices()->addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), Html::escapeHTML($_FILES['upfile']['name'])));
+                    App::backend()->notices()->addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), Html::escapeHTML($upfile['name'])));
                     My::redirect();
                 } else {
                     App::backend()->notices()->addSuccessNotice(__('A smilies zip package has been successfully installed.'));
@@ -160,17 +162,18 @@ class Manage
         if (!empty($_POST['saveorder'])) {
             $order = [];
             if (empty($_POST['smilies_order']) && !empty($_POST['order'])) {
-                $order = $_POST['order'];
+                $order = is_array($order = $_POST['order']) ? $order : [];
                 asort($order);
                 $order = array_keys($order);
             } elseif (!empty($_POST['smilies_order'])) {
-                $order = explode(',', (string) $_POST['smilies_order']);
+                $smilies_order = is_string($smilies_order = $_POST['smilies_order']) ? $smilies_order : '';
+                $order         = explode(',', $smilies_order);
             }
 
             if ($order !== []) {
                 try {
                     /**
-                     * @var array<int, array<string, mixed>>
+                     * @var array<int, array{code: string, name: string, onSmilebar: bool}>
                      */
                     $new_smilies = [];
                     foreach ($order as $v) {
@@ -189,69 +192,95 @@ class Manage
         if (!empty($_POST['actionsmilies']) && !empty($_POST['select'])) {
             $action = $_POST['actionsmilies'];
 
-            switch ($action) {
-                case 'clear':
-                    try {
-                        foreach ($_POST['select'] as $v) {
-                            unset($smilies[$v]);
+            /**
+             * @var array<string>
+             */
+            $select = is_array($select = $_POST['select']) ? $select : [];
+
+            if ($select !== []) {
+                switch ($action) {
+                    case 'clear':
+                        try {
+                            foreach ($select as $v) {
+                                $index = is_numeric($index = $v) ? (int) $index : null;
+                                if ($index !== null) {
+                                    unset($smilies[$index]);
+                                }
+                            }
+
+                            $smilies_editor->setSmilies($smilies);
+                            $smilies_editor->setConfig($smilies);
+                            App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully removed.'));
+                            My::redirect();
+                        } catch (Exception $e) {
+                            App::error()->add($e->getMessage());
                         }
 
-                        $smilies_editor->setSmilies($smilies);
-                        $smilies_editor->setConfig($smilies);
-                        App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully removed.'));
-                        My::redirect();
-                    } catch (Exception $e) {
-                        App::error()->add($e->getMessage());
-                    }
+                        break;
 
-                    break;
+                    case 'update':
+                        try {
+                            /**
+                             * @var array<int, string>
+                             */
+                            $codes = is_array($codes = $_POST['code']) ? $codes : [];
+                            /**
+                             * @var array<int, string>
+                             */
+                            $names = is_array($names = $_POST['name']) ? $names : [];
+                            if ($codes !== [] && $names !== []) {
+                                foreach ($select as $v) {
+                                    $index = is_numeric($index = $v) ? (int) $index : null;
+                                    if ($index !== null && isset($codes[$index]) && isset($names[$index])) {
+                                        $new_code = is_string($new_code = preg_replace('/[\s]+/', '', (string) $codes[$index])) ? $new_code : '';
+                                        if ($new_code !== '') {
+                                            $smilies[$index]['code'] = $new_code;
+                                            $smilies[$index]['name'] = $names[$index];
+                                        }
+                                    }
+                                }
+                            }
 
-                case 'update':
-                    try {
-                        foreach ($_POST['select'] as $v) {
-                            $smilies[(int) $v]['code'] = isset($_POST['code'][$v]) ? preg_replace('/[\s]+/', '', (string) $_POST['code'][$v]) : $smilies[(int) $v]['code'] ;
-                            $smilies[(int) $v]['name'] = $_POST['name'][$v] ?? $smilies[$v]['name'];
+                            $smilies_editor->setSmilies($smilies);
+                            $smilies_editor->setConfig($smilies);
+                            App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully updated.'));
+                            My::redirect();
+                        } catch (Exception $e) {
+                            App::error()->add($e->getMessage());
                         }
 
-                        $smilies_editor->setSmilies($smilies);
-                        $smilies_editor->setConfig($smilies);
-                        App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully updated.'));
-                        My::redirect();
-                    } catch (Exception $e) {
-                        App::error()->add($e->getMessage());
-                    }
+                        break;
 
-                    break;
+                    case 'display':
+                        try {
+                            foreach ($select as $v) {
+                                $smilies[(int) $v]['onSmilebar'] = true;
+                            }
 
-                case 'display':
-                    try {
-                        foreach ($_POST['select'] as $v) {
-                            $smilies[(int) $v]['onSmilebar'] = true;
+                            $smilies_editor->setConfig($smilies);
+                            App::backend()->notices()->addSuccessNotice(__('These selected smilies are now displayed on toolbar'));
+                            My::redirect();
+                        } catch (Exception $e) {
+                            App::error()->add($e->getMessage());
                         }
 
-                        $smilies_editor->setConfig($smilies);
-                        App::backend()->notices()->addSuccessNotice(__('These selected smilies are now displayed on toolbar'));
-                        My::redirect();
-                    } catch (Exception $e) {
-                        App::error()->add($e->getMessage());
-                    }
+                        break;
 
-                    break;
+                    case 'hide':
+                        try {
+                            foreach ($select as $v) {
+                                $smilies[(int) $v]['onSmilebar'] = false;
+                            }
 
-                case 'hide':
-                    try {
-                        foreach ($_POST['select'] as $v) {
-                            $smilies[(int) $v]['onSmilebar'] = false;
+                            $smilies_editor->setConfig($smilies);
+                            App::backend()->notices()->addSuccessNotice(__('These selected smilies are now hidden on toolbar.'));
+                            My::redirect();
+                        } catch (Exception $e) {
+                            App::error()->add($e->getMessage());
                         }
 
-                        $smilies_editor->setConfig($smilies);
-                        App::backend()->notices()->addSuccessNotice(__('These selected smilies are now hidden on toolbar.'));
-                        My::redirect();
-                    } catch (Exception $e) {
-                        App::error()->add($e->getMessage());
-                    }
-
-                    break;
+                        break;
+                }
             }
         }
 
@@ -259,12 +288,19 @@ class Manage
             try {
                 $count = count($smilies);
 
-                $smilies[$count]['code'] = preg_replace('/[\s]+/', '', (string) $_POST['smilecode']);
-                $smilies[$count]['name'] = $_POST['smilepic'];
+                $smilecode = is_string($smilecode = $_POST['smilecode']) ? $smilecode : '';
+                $smilepic  = is_string($smilepic = $_POST['smilepic']) ? $smilepic : '';
 
-                $smilies_editor->setSmilies($smilies);
-                App::backend()->notices()->addSuccessNotice(__('A new smiley has been successfully created'));
-                My::redirect();
+                $smilecode = preg_replace('/[\s]+/', '', $smilecode);
+
+                if (is_string($smilecode) && $smilecode !== '' && $smilepic !== '') {
+                    $smilies[$count]['code'] = $smilecode;
+                    $smilies[$count]['name'] = $smilepic;
+
+                    $smilies_editor->setSmilies($smilies);
+                    App::backend()->notices()->addSuccessNotice(__('A new smiley has been successfully created'));
+                    My::redirect();
+                }
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
@@ -273,16 +309,22 @@ class Manage
         # Zip download
         if (!empty($_GET['zipdl'])) {
             try {
-                @set_time_limit(300);
-                $fp  = fopen('php://output', 'wb');
-                $zip = new Zip($fp);
-                $zip->addDirectory(App::themes()->moduleInfo($theme, 'root') . '/smilies', '', true);
-                header('Content-Disposition: attachment;filename=smilies-' . $theme . '.zip');
-                header('Content-Type: application/x-zip');
+                $theme = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+                if ($theme !== '') {
+                    $theme_root = is_string($theme_root = App::themes()->moduleInfo($theme, 'root')) ? $theme_root : '';
+                    if ($theme_root !== '') {
+                        @set_time_limit(300);
+                        $fp  = fopen('php://output', 'wb');
+                        $zip = new Zip($fp);
+                        $zip->addDirectory($theme_root . '/smilies', '', true);
+                        header('Content-Disposition: attachment;filename=smilies-' . $theme . '.zip');
+                        header('Content-Type: application/x-zip');
 
-                $zip->write();
-                unset($zip);
-                exit;
+                        $zip->write();
+                        unset($zip);
+                        exit;
+                    }
+                }
             } catch (Exception $e) {
                 App::error()->add($e->getMessage());
             }
@@ -301,7 +343,7 @@ class Manage
         }
 
         $settings = My::settings();
-        $theme    = App::blog()->settings()->system->theme;
+        $theme    = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
         $ordering = App::auth()->isSuperAdmin() && !in_array($theme, explode(',', (string) App::config()->distributedThemes()));
 
         // Init
@@ -323,12 +365,12 @@ class Manage
 
         $smilies_bar_flag     = (bool) $settings->smilies_bar_flag;
         $smilies_preview_flag = (bool) $settings->smilies_preview_flag;
-        $smilies_public_text  = $settings->smilies_public_text;
+        $smilies_public_text  = is_string($smilies_public_text = $settings->smilies_public_text) ? $smilies_public_text : '';
 
         // Get theme Infos
         App::themes()->loadModules(App::blog()->themesPath(), null);
         $theme_define = App::themes()->getDefine($theme);
-        $theme_name   = $theme_define->get('name');
+        $theme_name   = is_string($theme_name = $theme_define->get('name')) ? $theme_name : '';
 
         // Get smilies code
         $smilies_editor = new CoreHelper();
