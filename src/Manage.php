@@ -232,7 +232,7 @@ class Manage
                                 foreach ($select as $v) {
                                     $index = is_numeric($index = $v) ? (int) $index : null;
                                     if ($index !== null && isset($codes[$index]) && isset($names[$index])) {
-                                        $new_code = is_string($new_code = preg_replace('/[\s]+/', '', (string) $codes[$index])) ? $new_code : '';
+                                        $new_code = is_string($new_code = preg_replace('/[\s]+/', '', $codes[$index])) ? $new_code : '';
                                         if ($new_code !== '') {
                                             $smilies[$index] = [
                                                 'code' => $new_code,
