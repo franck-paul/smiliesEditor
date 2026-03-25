@@ -234,8 +234,10 @@ class Manage
                                     if ($index !== null && isset($codes[$index]) && isset($names[$index])) {
                                         $new_code = is_string($new_code = preg_replace('/[\s]+/', '', (string) $codes[$index])) ? $new_code : '';
                                         if ($new_code !== '') {
-                                            $smilies[$index]['code'] = $new_code;
-                                            $smilies[$index]['name'] = $names[$index];
+                                            $smilies[$index] = [
+                                                'code' => $new_code,
+                                                'name' => $names[$index],
+                                            ];
                                         }
                                     }
                                 }
@@ -254,7 +256,10 @@ class Manage
                     case 'display':
                         try {
                             foreach ($select as $v) {
-                                $smilies[(int) $v]['onSmilebar'] = true;
+                                $key = (int) $v;
+                                if (isset($smilies[$key]['code'])) {
+                                    $smilies[$key]['onSmilebar'] = true;
+                                }
                             }
 
                             $smilies_editor->setConfig($smilies);
@@ -269,7 +274,10 @@ class Manage
                     case 'hide':
                         try {
                             foreach ($select as $v) {
-                                $smilies[(int) $v]['onSmilebar'] = false;
+                                $key = (int) $v;
+                                if (isset($smilies[$key]['code'])) {
+                                    $smilies[$key]['onSmilebar'] = false;
+                                }
                             }
 
                             $smilies_editor->setConfig($smilies);
@@ -286,16 +294,16 @@ class Manage
 
         if (!empty($_POST['smilecode']) && !empty($_POST['smilepic'])) {
             try {
-                $count = count($smilies);
-
                 $smilecode = is_string($smilecode = $_POST['smilecode']) ? $smilecode : '';
                 $smilepic  = is_string($smilepic = $_POST['smilepic']) ? $smilepic : '';
 
                 $smilecode = preg_replace('/[\s]+/', '', $smilecode);
 
                 if (is_string($smilecode) && $smilecode !== '' && $smilepic !== '') {
-                    $smilies[$count]['code'] = $smilecode;
-                    $smilies[$count]['name'] = $smilepic;
+                    $smilies[] = [
+                        'code' => $smilecode,
+                        'name' => $smilepic,
+                    ];
 
                     $smilies_editor->setSmilies($smilies);
                     App::backend()->notices()->addSuccessNotice(__('A new smiley has been successfully created'));
