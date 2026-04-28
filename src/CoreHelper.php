@@ -159,7 +159,7 @@ class CoreHelper
             }
         }
 
-        My::settings()->put('smilies_toolbar', serialize($config), 'string');
+        My::settings()->put('smilies_toolbar', serialize($config), App::blogWorkspace()::NS_STRING);
 
         App::blog()->triggerBlog();
 
