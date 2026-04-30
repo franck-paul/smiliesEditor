@@ -35,18 +35,9 @@ class BackendBehaviors
         /**
          * @var        array<string, mixed>
          */
-        $opts = [];
+        $opts = $rs instanceof MetaRecord ? $rs->options() : App::auth()->getOptions();
 
-        if (is_null($rs)) {
-            $opts = App::auth()->getOptions();
-        } elseif ($rs instanceof MetaRecord) {
-            $opts = $rs->options();
-        }
-
-        $value = false;
-        if (is_array($opts)) {
-            $value = $opts['smilies_editor_admin'] ?? false;
-        }
+        $value = $opts['smilies_editor_admin'] ?? false;
 
         echo (new Fieldset('smilies_editor'))
             ->legend(new Legend(__('Toolbar')))
