@@ -15,6 +15,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
+use ArrayObject;
 use Dotclear\App;
 use Dotclear\Database\Cursor;
 use Dotclear\Database\MetaRecord;
@@ -54,7 +55,7 @@ class BackendBehaviors
 
     public static function setSmiliesDisplay(Cursor $cur): string
     {
-        if (is_array($cur->user_options)) {
+        if (is_array($cur->user_options) || $cur->user_options instanceof ArrayObject) {
             $cur->user_options['smilies_editor_admin'] = !empty($_POST['smilies_editor_admin']);
         }
 
