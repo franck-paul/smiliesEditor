@@ -13,10 +13,10 @@ function InsertSmiley(textarea, smiley) {
   let start;
   let end;
   let scrollPos;
-  if (typeof document.selection != 'undefined') {
+  if (document.selection !== undefined) {
     document.selection.createRange().text = smiley;
     textarea.caretPos += smiley.length;
-  } else if (typeof textarea.setSelectionRange != 'undefined') {
+  } else if (textarea.setSelectionRange !== undefined) {
     start = textarea.selectionStart;
     end = textarea.selectionEnd;
     scrollPos = textarea.scrollTop;
