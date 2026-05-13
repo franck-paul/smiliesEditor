@@ -37,5 +37,5 @@ dotclear.ready(() => {
   $('#smilies-list tr td input.position').hide();
   $('#smilies-list tr td.handle').addClass('handler');
 
-  $('#del_form').on('submit', () => window.confirm(dotclear.msg.confirm_image_delete));
+  $('#del_form').on('submit', () => globalThis.confirm(dotclear.msg.confirm_image_delete));
 });

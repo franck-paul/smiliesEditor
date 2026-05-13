@@ -1,4 +1,4 @@
-/*global $, dotclear, jsToolBar */
+/*global $, dotclear */
 'use strict';
 
 dotclear.ready(() => {
@@ -6,7 +6,7 @@ dotclear.ready(() => {
   const buttons = dotclear.getData('smilieseditor');
   for (const button in buttons) {
     const name = `smilieseditor_s${buttons[button].id}`;
-    jsToolBar.prototype.elements[name] = {
+    dotclear.ToolBar.prototype.elements[name] = {
       type: 'button',
       title: buttons[button].code,
       icon: buttons[button].icon,
