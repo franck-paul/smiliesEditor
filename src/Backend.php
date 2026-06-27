@@ -46,7 +46,7 @@ class Backend
         App::behavior()->addBehavior('adminBeforeUserCreate', BackendBehaviors::setSmiliesDisplay(...));
         App::behavior()->addBehavior('adminBeforeUserUpdate', BackendBehaviors::setSmiliesDisplay(...));
 
-        if (App::auth()->getOption('smilies_editor_admin')) {
+        if (App::auth()->prefs()->get('interface')->get('smilies_editor_admin')) {
             App::behavior()->addBehavior('adminPostHeaders', BackendBehaviors::adminPostHeaders(...));
             App::behavior()->addBehavior('adminPageHeaders', BackendBehaviors::adminPostHeaders(...));
             App::behavior()->addBehavior('adminRelatedHeaders', BackendBehaviors::adminPostHeaders(...));

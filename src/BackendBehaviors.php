@@ -15,36 +15,26 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\smiliesEditor;
 
-use ArrayObject;
 use Dotclear\App;
-use Dotclear\Database\Cursor;
-use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Label;
 use Dotclear\Helper\Html\Form\Legend;
 use Dotclear\Helper\Html\Form\Para;
 use Dotclear\Helper\Html\Html;
+use Dotclear\Interface\Core\UserWorkspaceInterface;
 
 class BackendBehaviors
 {
-    /**
-     * @param      null|Metarecord   $rs   The arguments
-     */
-    public static function adminUserForm(?MetaRecord $rs = null): string
+    public static function adminUserForm(): string
     {
-        /**
-         * @var        array<string, mixed>
-         */
-        $opts = $rs instanceof MetaRecord ? $rs->options() : App::auth()->getOptions();
-
-        $value = $opts['smilies_editor_admin'] ?? false;
+        $value = is_bool($value = App::auth()->prefs()->get('interface')->get('smilies_editor_admin')) && $value;
 
         echo (new Fieldset('smilies_editor'))
             ->legend(new Legend(__('Toolbar')))
             ->items([
                 (new Para())->items([
-                    (new Checkbox('smilies_editor_admin', (bool) $value))
+                    (new Checkbox('smilies_editor_admin', $value))
                         ->label(new Label(__('Display smilies on toolbar'), Label::INSIDE_TEXT_AFTER)),
                 ]),
             ])
@@ -53,11 +43,13 @@ class BackendBehaviors
         return '';
     }
 
-    public static function setSmiliesDisplay(Cursor $cur): string
+    public static function setSmiliesDisplay(): string
     {
-        if (is_array($cur->user_options) || $cur->user_options instanceof ArrayObject) {
-            $cur->user_options['smilies_editor_admin'] = !empty($_POST['smilies_editor_admin']);
-        }
+        App::auth()->prefs()->get('interface')->put(
+            'smilies_editor_admin',
+            !empty($_POST['smilies_editor_admin']),
+            UserWorkspaceInterface::WS_BOOL
+        );
 
         return '';
     }

@@ -17,6 +17,8 @@ namespace Dotclear\Plugin\smiliesEditor;
 
 use Dotclear\App;
 use Dotclear\Helper\Process\TraitProcess;
+use Dotclear\Interface\Core\BlogWorkspaceInterface;
+use Dotclear\Interface\Core\UserWorkspaceInterface;
 use Exception;
 
 class Install
@@ -45,10 +47,23 @@ class Install
             // Init
             $settings = My::settings();
 
-            $settings->put('smilies_bar_flag', false, App::blogWorkspace()::NS_BOOL, 'Show smilies toolbar', false, true);
-            $settings->put('smilies_preview_flag', false, App::blogWorkspace()::NS_BOOL, 'Show smilies on preview', false, true);
-            $settings->put('smilies_toolbar', '', App::blogWorkspace()::NS_STRING, 'Smilies displayed in toolbar', false, true);
-            $settings->put('smilies_public_text', __('Smilies'), App::blogWorkspace()::NS_STRING, 'Smilies displayed in toolbar', false, true);
+            $settings->put('smilies_bar_flag', false, BlogWorkspaceInterface::NS_BOOL, 'Show smilies toolbar', false, true);
+            $settings->put('smilies_preview_flag', false, BlogWorkspaceInterface::NS_BOOL, 'Show smilies on preview', false, true);
+            $settings->put('smilies_toolbar', '', BlogWorkspaceInterface::NS_STRING, 'Smilies displayed in toolbar', false, true);
+            $settings->put('smilies_public_text', __('Smilies'), BlogWorkspaceInterface::NS_STRING, 'Smilies displayed in toolbar', false, true);
+
+            if (!App::auth()->prefs()->get('interface')->prefExists('smilies_editor_admin', true)) {
+                // Migrate old option if possible
+                $format = App::auth()->getOption('smilies_editor_admin') ?? false;
+                App::auth()->prefs()->get('interface')->put(
+                    'smilies_editor_admin',
+                    $format,
+                    UserWorkspaceInterface::WS_BOOL,
+                    'Display smilies on toolbar',
+                    true,
+                    true
+                );
+            }
         } catch (Exception $exception) {
             App::error()->add($exception->getMessage());
         }
