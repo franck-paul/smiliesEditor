@@ -28,7 +28,7 @@ class BackendBehaviors
 {
     public static function adminUserForm(): string
     {
-        $value = is_bool($value = App::auth()->prefs()->get('interface')->get('smilies_editor_admin')) && $value;
+        $value = App::auth()->prefs()->get('interface')->getBool('smilies_editor_admin', false);
 
         echo (new Fieldset('smilies_editor'))
             ->legend(new Legend(__('Toolbar')))

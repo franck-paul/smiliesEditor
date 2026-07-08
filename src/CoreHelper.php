@@ -58,18 +58,15 @@ class CoreHelper
 
     public function __construct()
     {
-        $smi = My::settings();
-        $sys = App::blog()->settings()->system;
-
-        $theme      = is_string($theme = $sys->theme) ? $theme : '';
-        $themes_url = is_string($themes_url = $sys->themes_url) ? $themes_url : '';
+        $theme      = App::blog()->settings()->get('system')->getStr('theme', false);
+        $themes_url = App::blog()->settings()->get('system')->getStr('themes_url', false);
 
         if ($theme !== '') {
             $this->smilies_desc_file = App::blog()->themesPath() . '/' . $theme . '/' . $this->smilies_dir . '/' . $this->smilies_file_name;
             $this->smilies_base_url  = $themes_url . '/' . $theme . '/' . $this->smilies_dir . '/';
             $this->smilies_path      = App::blog()->themesPath() . '/' . $theme . '/' . $this->smilies_dir;
 
-            $smilies_toolbar = is_string($smilies_toolbar = $smi->smilies_toolbar) ? $smilies_toolbar : '';
+            $smilies_toolbar = My::settings()->getStr('smilies_toolbar', false);
             if ($smilies_toolbar !== '') {
                 /**
                  * @var array<string>
@@ -247,7 +244,7 @@ class CoreHelper
     public function createDir(): void
     {
         try {
-            $theme = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+            $theme = App::blog()->settings()->get('system')->getStr('theme', false);
             if ($theme !== '') {
                 Files::makeDir(App::blog()->themesPath() . '/' . $theme . '/' . Path::clean($this->smilies_dir));
             }

@@ -317,7 +317,7 @@ class Manage
         # Zip download
         if (!empty($_GET['zipdl'])) {
             try {
-                $theme = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+                $theme = App::blog()->settings()->get('system')->getStr('theme', false);
                 if ($theme !== '') {
                     $theme_root = is_string($theme_root = App::themes()->moduleInfo($theme, 'root')) ? $theme_root : '';
                     if ($theme_root !== '') {
@@ -351,7 +351,7 @@ class Manage
         }
 
         $settings = My::settings();
-        $theme    = is_string($theme = App::blog()->settings()->system->theme) ? $theme : '';
+        $theme    = App::blog()->settings()->get('system')->getStr('theme', false);
         $ordering = App::auth()->isSuperAdmin() && !in_array($theme, explode(',', (string) App::config()->distributedThemes()));
 
         // Init
@@ -371,9 +371,9 @@ class Manage
                 ]);
         }
 
-        $smilies_bar_flag     = (bool) $settings->smilies_bar_flag;
-        $smilies_preview_flag = (bool) $settings->smilies_preview_flag;
-        $smilies_public_text  = is_string($smilies_public_text = $settings->smilies_public_text) ? $smilies_public_text : '';
+        $smilies_bar_flag     = $settings->getBool('smilies_bar_flag', false);
+        $smilies_preview_flag = $settings->getBool('smilies_preview_flag', false);
+        $smilies_public_text  = $settings->getStr('smilies_public_text', false);
 
         // Get theme Infos
         App::themes()->loadModules(App::blog()->themesPath(), null);

@@ -41,7 +41,7 @@ class Frontend
         App::behavior()->addBehavior('publicEditEntryFormAfter', FrontendBehaviors::publicFormAfterContent(...));
 
         $settings = My::settings();
-        if ($settings->smilies_preview_flag) {
+        if ($settings->getBool('smilies_preview_flag')) {
             App::behavior()->addBehavior('publicBeforeCommentPreview', FrontendBehaviors::publicBeforeCommentPreview(...));
         }
 

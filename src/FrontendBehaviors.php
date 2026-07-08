@@ -25,8 +25,8 @@ class FrontendBehaviors
     {
         $settings = My::settings();
 
-        $use_smilies      = (bool) App::blog()->settings()->system->use_smilies;
-        $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
+        $use_smilies      = App::blog()->settings()->get('system')->getBool('use_smilies', false);
+        $smilies_bar_flag = $settings->getBool('smilies_bar_flag', false);
 
         if ($smilies_bar_flag && $use_smilies) {
             $js = Html::stripHostURL(App::blog()->getQmarkURL() . 'pf=smiliesEditor/js/smile.js');
@@ -40,9 +40,9 @@ class FrontendBehaviors
     {
         $settings = My::settings();
 
-        $use_smilies      = (bool) App::blog()->settings()->system->use_smilies;
-        $smilies_bar_flag = (bool) $settings->smilies_bar_flag;
-        $public_text      = is_string($public_text = $settings->smilies_public_text) ? $public_text : '';
+        $use_smilies      = App::blog()->settings()->get('system')->getBool('use_smilies', false);
+        $smilies_bar_flag = $settings->getBool('smilies_bar_flag', false);
+        $public_text      = $settings->getStr('smilies_public_text', false);
 
         if (!$smilies_bar_flag || !$use_smilies) {
             return '';
