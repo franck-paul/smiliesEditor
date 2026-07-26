@@ -41,10 +41,11 @@ class Backend
         My::addBackendMenuItem(Menus::MENU_BLOG);
 
         App::behavior()->addBehavior('adminPreferencesFormV2', BackendBehaviors::adminPreferencesForm(...));
-        App::behavior()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));
         App::behavior()->addBehavior('adminBeforeUserOptionsUpdate', BackendBehaviors::setSmiliesDisplay(...));
-        App::behavior()->addBehavior('adminBeforeUserCreate', BackendBehaviors::setSmiliesDisplayUser(...));
-        App::behavior()->addBehavior('adminBeforeUserUpdate', BackendBehaviors::setSmiliesDisplayUser(...));
+
+        App::behavior()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));
+        App::behavior()->addBehavior('adminAfterUserCreate', BackendBehaviors::setSmiliesDisplayUser(...));
+        App::behavior()->addBehavior('adminAfterUserUpdate', BackendBehaviors::setSmiliesDisplayUser(...));
 
         if (App::auth()->prefs()->get('interface')->getBool('smilies_editor_admin')) {
             App::behavior()->addBehavior('adminPostHeaders', BackendBehaviors::adminPostHeaders(...));
