@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\smiliesEditor;
 
 use Dotclear\App;
 use Dotclear\Database\Cursor;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Label;
@@ -27,7 +28,7 @@ use Dotclear\Interface\Core\UserWorkspaceInterface;
 
 class BackendBehaviors
 {
-    public static function adminUserForm(): string
+    public static function adminPreferencesForm(): string
     {
         $value = App::auth()->prefs()->get('interface')->getBool('smilies_editor_admin', false);
 
@@ -40,6 +41,27 @@ class BackendBehaviors
                 ]),
             ])
         ->render();
+
+        return '';
+    }
+
+    public static function adminUserForm(?MetaRecord $rs): string
+    {
+        $user_id = $rs instanceof MetaRecord ? $rs->strField('user_id') : '';
+
+        if ($user_id !== '') {
+            $value = App::userPreferences()->createFromUser($user_id)->get('interface')->getBool('smilies_editor_admin', false);
+
+            echo (new Fieldset('smilies_editor'))
+                ->legend(new Legend(__('Toolbar')))
+                ->items([
+                    (new Para())->items([
+                        (new Checkbox('smilies_editor_admin', $value))
+                            ->label(new Label(__('Display smilies on toolbar'), Label::INSIDE_TEXT_AFTER)),
+                    ]),
+                ])
+            ->render();
+        }
 
         return '';
     }

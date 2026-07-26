@@ -40,7 +40,7 @@ class Backend
 
         My::addBackendMenuItem(Menus::MENU_BLOG);
 
-        App::behavior()->addBehavior('adminPreferencesFormV2', BackendBehaviors::adminUserForm(...));
+        App::behavior()->addBehavior('adminPreferencesFormV2', BackendBehaviors::adminPreferencesForm(...));
         App::behavior()->addBehavior('adminUserForm', BackendBehaviors::adminUserForm(...));
         App::behavior()->addBehavior('adminBeforeUserOptionsUpdate', BackendBehaviors::setSmiliesDisplay(...));
         App::behavior()->addBehavior('adminBeforeUserCreate', BackendBehaviors::setSmiliesDisplayUser(...));
