@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\smiliesEditor;
 
 use Dotclear\App;
+use Dotclear\Database\Cursor;
 use Dotclear\Helper\Html\Form\Checkbox;
 use Dotclear\Helper\Html\Form\Fieldset;
 use Dotclear\Helper\Html\Form\Label;
@@ -50,6 +51,19 @@ class BackendBehaviors
             !empty($_POST['smilies_editor_admin']),
             UserWorkspaceInterface::WS_BOOL
         );
+
+        return '';
+    }
+
+    public static function setSmiliesDisplayUser(Cursor $cur, string $user_id): string
+    {
+        if ($user_id !== '') {
+            App::userPreferences()->createFromUser($user_id)->get('interface')->put(
+                'smilies_editor_admin',
+                !empty($_POST['smilies_editor_admin']),
+                UserWorkspaceInterface::WS_BOOL
+            );
+        }
 
         return '';
     }
