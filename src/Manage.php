@@ -231,7 +231,10 @@ class Manage
                             if ($codes !== [] && $names !== []) {
                                 foreach ($select as $v) {
                                     $index = is_numeric($index = $v) ? (int) $index : null;
-                                    if ($index !== null && isset($codes[$index]) && isset($names[$index])) {
+                                    if ($index !== null
+                                        && isset($codes[$index])
+                                        && isset($names[$index])
+                                    ) {
                                         $new_code = is_string($new_code = preg_replace('/[\s]+/', '', $codes[$index])) ? $new_code : '';
                                         if ($new_code !== '') {
                                             $smilies[$index] = [
@@ -299,7 +302,10 @@ class Manage
 
                 $smilecode = preg_replace('/[\s]+/', '', $smilecode);
 
-                if (is_string($smilecode) && $smilecode !== '' && $smilepic !== '') {
+                if (is_string($smilecode)
+                    && $smilecode !== ''
+                    && $smilepic  !== ''
+                ) {
                     $smilies[] = [
                         'code' => $smilecode,
                         'name' => $smilepic,
@@ -694,7 +700,10 @@ class Manage
                 ]);
         }
 
-        if ($images_all !== [] && $ordering && $smilies_editor->images_list !== []) {
+        if ($images_all !== []
+            && $ordering
+            && $smilies_editor->images_list !== []
+        ) {
             $list = function () use ($smilies_editor) {
                 foreach ($smilies_editor->images_list as $value) {
                     yield (new Img(App::blog()->host() . $value['url']))
