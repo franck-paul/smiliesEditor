@@ -173,9 +173,7 @@ class CoreHelper
      */
     public function uploadSmile(string $tmp, string $name): ?string
     {
-        if (!isset($this->filemanager)) {
-            $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
-        }
+        $this->filemanager ??= new Manager($this->smilies_path, $this->smilies_base_url);
 
         $name = Files::tidyFileName($name);
 
