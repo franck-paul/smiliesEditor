@@ -594,7 +594,7 @@ class Manage
                         ->items([
                             (new Para())
                                 ->class(['col', 'checkboxes-helpers']),
-                            (new para())
+                            (new Para())
                                 ->class(['col', 'right', 'form-buttons'])
                                 ->items([
                                     (new Select('actionsmilies'))
