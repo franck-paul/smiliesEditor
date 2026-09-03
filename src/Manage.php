@@ -74,16 +74,16 @@ class Manage
         $settings = My::settings();
 
         // Get smilies code
-        $smilies_editor = new CoreHelper();
+        $coreHelper = new CoreHelper();
 
         /**
          * @var array<int, array{code: string, name: string, onSmilebar: bool}>
          */
-        $smilies = $smilies_editor->getSmilies();
+        $smilies = $coreHelper->getSmilies();
 
         if (!empty($_POST['create_dir'])) {
             try {
-                $smilies_editor->createDir();
+                $coreHelper->createDir();
                 My::redirect();
                 App::backend()->notices()->addSuccessNotice(__('The subfolder has been successfully created'));
             } catch (Exception $e) {
@@ -118,11 +118,11 @@ class Manage
                     $smileys_list = array_merge($smileys_list, [$v['name'] => $v['name']]);
                 }
 
-                $smilies_editor->getFiles();
-                foreach ($smilies_editor->images_list as $v) {
+                $coreHelper->getFiles();
+                foreach ($coreHelper->images_list as $v) {
                     if (!array_key_exists($v['name'], $smileys_list)) {
                         try {
-                            $smilies_editor->filemanager->removeItem($v['name']);
+                            $coreHelper->filemanager->removeItem($v['name']);
                         } catch (Exception $e) {
                             App::error()->add($e->getMessage());
                         }
@@ -146,7 +146,7 @@ class Manage
                  */
                 $upfile = $_FILES['upfile'];
                 Files::uploadStatus($upfile);
-                $file = $smilies_editor->uploadSmile($upfile['tmp_name'], $upfile['name']);
+                $file = $coreHelper->uploadSmile($upfile['tmp_name'], $upfile['name']);
                 if ($file) {
                     App::backend()->notices()->addSuccessNotice(sprintf(__('The image <em>%s</em> has been successfully uploaded.'), Html::escapeHTML($upfile['name'])));
                     My::redirect();
@@ -180,7 +180,7 @@ class Manage
                         $new_smilies[(int) $v] = $smilies[(int) $v];
                     }
 
-                    $smilies_editor->setSmilies($new_smilies);
+                    $coreHelper->setSmilies($new_smilies);
                     App::backend()->notices()->addSuccessNotice(__('Order of smilies has been successfully changed.'));
                     My::redirect();
                 } catch (Exception $e) {
@@ -208,8 +208,8 @@ class Manage
                                 }
                             }
 
-                            $smilies_editor->setSmilies($smilies);
-                            $smilies_editor->setConfig($smilies);
+                            $coreHelper->setSmilies($smilies);
+                            $coreHelper->setConfig($smilies);
                             App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully removed.'));
                             My::redirect();
                         } catch (Exception $e) {
@@ -246,8 +246,8 @@ class Manage
                                 }
                             }
 
-                            $smilies_editor->setSmilies($smilies);
-                            $smilies_editor->setConfig($smilies);
+                            $coreHelper->setSmilies($smilies);
+                            $coreHelper->setConfig($smilies);
                             App::backend()->notices()->addSuccessNotice(__('Smilies has been successfully updated.'));
                             My::redirect();
                         } catch (Exception $e) {
@@ -265,7 +265,7 @@ class Manage
                                 }
                             }
 
-                            $smilies_editor->setConfig($smilies);
+                            $coreHelper->setConfig($smilies);
                             App::backend()->notices()->addSuccessNotice(__('These selected smilies are now displayed on toolbar'));
                             My::redirect();
                         } catch (Exception $e) {
@@ -283,7 +283,7 @@ class Manage
                                 }
                             }
 
-                            $smilies_editor->setConfig($smilies);
+                            $coreHelper->setConfig($smilies);
                             App::backend()->notices()->addSuccessNotice(__('These selected smilies are now hidden on toolbar.'));
                             My::redirect();
                         } catch (Exception $e) {
@@ -311,7 +311,7 @@ class Manage
                         'name' => $smilepic,
                     ];
 
-                    $smilies_editor->setSmilies($smilies);
+                    $coreHelper->setSmilies($smilies);
                     App::backend()->notices()->addSuccessNotice(__('A new smiley has been successfully created'));
                     My::redirect();
                 }
@@ -387,13 +387,13 @@ class Manage
         $theme_name   = is_string($theme_name = $theme_define->get('name')) ? $theme_name : '';
 
         // Get smilies code
-        $smilies_editor = new CoreHelper();
-        $smilies        = $smilies_editor->getSmilies();
+        $coreHelper = new CoreHelper();
+        $smilies    = $coreHelper->getSmilies();
 
         // Init the filemanager
         try {
-            $smilies_editor->getFiles();
-            $smg_writable = $smilies_editor->filemanager->writable();
+            $coreHelper->getFiles();
+            $smg_writable = $coreHelper->filemanager->writable();
         } catch (Exception $exception) {
             App::backend()->notices()->addWarningNotice($exception->getMessage());
         }
@@ -406,21 +406,21 @@ class Manage
 
         // Create the combo of all images available in directory
         $smileys_combo = [];
-        foreach ($smilies_editor->images_list as $k => $v) {
+        foreach ($coreHelper->images_list as $k => $v) {
             $smileys_combo = array_merge($smileys_combo, [$v['name'] => $v['name']]);
         }
 
-        $images_all = $smilies_editor->images_list;
-        foreach ($smilies_editor->images_list as $k => $v) {
+        $images_all = $coreHelper->images_list;
+        foreach ($coreHelper->images_list as $k => $v) {
             if (array_key_exists($v['name'], $smileys_list)) {
-                unset($smilies_editor->images_list[$k]);
+                unset($coreHelper->images_list[$k]);
             }
         }
 
         $head = App::backend()->page()->jsLoad('js/jquery/jquery-ui.custom.js') .
         App::backend()->page()->jsLoad('js/jquery/jquery.ui.touch-punch.js') .
         App::backend()->page()->jsJson('smilies', [
-            'smilies_base_url'     => App::blog()->host() . $smilies_editor->smilies_base_url,
+            'smilies_base_url'     => App::blog()->host() . $coreHelper->smilies_base_url,
             'confirm_image_delete' => sprintf(__('Are you sure you want to remove these %s ?'), 'images'),
         ]) .
         My::jsLoad('_smilies.js') .
@@ -453,7 +453,7 @@ class Manage
             ));
 
         if ($smilies === []) {
-            if (!empty($smilies_editor->filemanager)) {
+            if (!empty($coreHelper->filemanager)) {
                 $items[] = (new Note())
                     ->class(['form-note', 'info'])
                     ->text(__('No defined smiley yet.'));
@@ -615,7 +615,7 @@ class Manage
 
         $forms = [];
         if ($images_all === []) {
-            if (empty($smilies_editor->filemanager)) {
+            if (empty($coreHelper->filemanager)) {
                 $forms[] = (new Div())
                     ->class('col')
                     ->items([
@@ -702,10 +702,10 @@ class Manage
 
         if ($images_all !== []
             && $ordering
-            && $smilies_editor->images_list !== []
+            && $coreHelper->images_list !== []
         ) {
-            $list = function () use ($smilies_editor) {
-                foreach ($smilies_editor->images_list as $value) {
+            $list = function () use ($coreHelper) {
+                foreach ($coreHelper->images_list as $value) {
                     yield (new Img(App::blog()->host() . $value['url']))
                         ->alt($value['name'])
                         ->class('emote')

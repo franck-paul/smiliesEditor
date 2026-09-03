@@ -45,9 +45,9 @@ class BackendBehaviors
         return '';
     }
 
-    public static function adminUserForm(?MetaRecord $rs): string
+    public static function adminUserForm(?MetaRecord $metaRecord): string
     {
-        $user_id = $rs instanceof MetaRecord ? $rs->strField('user_id') : '';
+        $user_id = $metaRecord instanceof MetaRecord ? $metaRecord->strField('user_id') : '';
 
         if ($user_id !== '') {
             $value = App::userPreferences()->createFromUser($user_id)->get('interface')->getBool('smilies_editor_admin', false);
@@ -77,7 +77,7 @@ class BackendBehaviors
         return '';
     }
 
-    public static function setSmiliesDisplayUser(Cursor $cur, string $user_id): string
+    public static function setSmiliesDisplayUser(Cursor $cursor, string $user_id): string
     {
         if ($user_id !== '') {
             App::userPreferences()->createFromUser($user_id)->get('interface')->put(
@@ -92,15 +92,15 @@ class BackendBehaviors
 
     public static function adminPostHeaders(): string
     {
-        $smiliesEditor = new CoreHelper();
-        $smilies       = $smiliesEditor->getSmilies();
-        $buttons       = [];
+        $coreHelper = new CoreHelper();
+        $smilies    = $coreHelper->getSmilies();
+        $buttons    = [];
         foreach ($smilies as $id => $smiley) {
             if ($smiley['onSmilebar']) {
                 $buttons[] = [
                     'id'   => $id,
                     'code' => Html::escapeJS($smiley['code']),
-                    'icon' => Html::escapeJS(App::blog()->host() . $smiliesEditor->smilies_base_url . $smiley['name']),
+                    'icon' => Html::escapeJS(App::blog()->host() . $coreHelper->smilies_base_url . $smiley['name']),
                 ];
             }
         }

@@ -126,8 +126,8 @@ class CoreHelper
 
                 $fcontent = '';
 
-                foreach ($smilies as $smiley) {
-                    $fcontent .= $smiley['code'] . "\t\t" . $smiley['name'] . "\r\n";
+                foreach ($smilies as $smily) {
+                    $fcontent .= $smily['code'] . "\t\t" . $smily['name'] . "\r\n";
                 }
 
                 fwrite($fp, $fcontent);
@@ -150,9 +150,9 @@ class CoreHelper
     public function setConfig(array $smilies): bool
     {
         $config = [];
-        foreach ($smilies as $smiley) {
-            if ($smiley['onSmilebar']) {
-                $config[] = $smiley['code'];
+        foreach ($smilies as $smily) {
+            if ($smily['onSmilebar']) {
+                $config[] = $smily['code'];
             }
         }
 
@@ -224,13 +224,13 @@ class CoreHelper
         try {
             $this->filemanager = new Manager($this->smilies_path, $this->smilies_base_url);
             $this->filemanager->getDir();
-            foreach ($this->filemanager->getFiles() as $v) {
-                if ($v->basename && $v->basename !== $this->smilies_file_name) {
+            foreach ($this->filemanager->getFiles() as $file) {
+                if ($file->basename && $file->basename !== $this->smilies_file_name) {
                     // @phpstan-ignore array.invalidKey
-                    $this->files_list[$v->basename] = [$v->basename => 'name',  $v->file_url => 'url', $v->type => 'type'];
+                    $this->files_list[$file->basename] = [$file->basename => 'name',  $file->file_url => 'url', $file->type => 'type'];
 
-                    if (preg_match('/^(image)(.+)$/', (string) $v->type) !== false) {
-                        $this->images_list[$v->basename] = ['name' => $v->basename,  'url' => $v->file_url];
+                    if (preg_match('/^(image)(.+)$/', (string) $file->type) !== false) {
+                        $this->images_list[$file->basename] = ['name' => $file->basename,  'url' => $file->file_url];
                     }
                 }
             }
@@ -253,37 +253,37 @@ class CoreHelper
 
     public function loadAllSmilies(string $zip_file): bool
     {
-        $zip = new Unzip($zip_file);
-        $zip->getList(false, '#(^|/)(__MACOSX|\.directory|\.svn|\.DS_Store|Thumbs\.db)(/|$)#');
+        $unzip = new Unzip($zip_file);
+        $unzip->getList(false, '#(^|/)(__MACOSX|\.directory|\.svn|\.DS_Store|Thumbs\.db)(/|$)#');
 
-        $zip_root_dir = $zip->getRootDir();
+        $zip_root_dir = $unzip->getRootDir();
 
         $define = '';
         $target = dirname($zip_file);
         if ($zip_root_dir !== false) {
             $define     = $zip_root_dir . '/' . $this->smilies_file_name;
-            $has_define = $zip->hasFile($define);
+            $has_define = $unzip->hasFile($define);
         } else {
             $define     = $this->smilies_file_name;
-            $has_define = $zip->hasFile($define);
+            $has_define = $unzip->hasFile($define);
         }
 
-        if ($zip->isEmpty()) {
-            $zip->close();
+        if ($unzip->isEmpty()) {
+            $unzip->close();
             unlink($zip_file);
 
             throw new Exception(__('Empty smilies zip file.'));
         }
 
         if (!$has_define) {
-            $zip->close();
+            $unzip->close();
             unlink($zip_file);
 
             throw new Exception(__('The zip file does not appear to be a valid Dotclear smilies package.'));
         }
 
-        $zip->unzipAll($target);
-        $zip->close();
+        $unzip->unzipAll($target);
+        $unzip->close();
         unlink($zip_file);
 
         return true;

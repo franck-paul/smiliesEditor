@@ -48,16 +48,16 @@ class FrontendBehaviors
             return '';
         }
 
-        $sE      = new CoreHelper();
-        $smilies = $sE->getSmilies();
-        $field   = '<p class="field smilies"><label>' . Html::escapeHTML($public_text) . '&nbsp;:</label><span>%s</span></p>';
+        $coreHelper = new CoreHelper();
+        $smilies    = $coreHelper->getSmilies();
+        $field      = '<p class="field smilies"><label>' . Html::escapeHTML($public_text) . '&nbsp;:</label><span>%s</span></p>';
 
         $res = '';
-        foreach ($smilies as $smiley) {
-            if ($smiley['onSmilebar']) {
-                $res .= ' <img class="smiley" src="' . $sE->smilies_base_url . $smiley['name'] . '" alt="' .
-                Html::escapeHTML($smiley['code']) . '" title="' . Html::escapeHTML($smiley['code']) . '" onclick="javascript:InsertSmiley(\'c_content\', \'' .
-                Html::escapeHTML($smiley['code']) . ' \');" style="cursor:pointer;">';
+        foreach ($smilies as $smily) {
+            if ($smily['onSmilebar']) {
+                $res .= ' <img class="smiley" src="' . $coreHelper->smilies_base_url . $smily['name'] . '" alt="' .
+                Html::escapeHTML($smily['code']) . '" title="' . Html::escapeHTML($smily['code']) . '" onclick="javascript:InsertSmiley(\'c_content\', \'' .
+                Html::escapeHTML($smily['code']) . ' \');" style="cursor:pointer;">';
             }
         }
 
