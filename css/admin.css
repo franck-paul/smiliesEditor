@@ -1,22 +1,28 @@
 option[selected='selected'] {
   color: #c00;
 }
+
 select {
   background-color: #fff !important;
 }
+
 img.smiley {
   vertical-align: middle;
 }
+
 tr.line select.emote {
-  width: inherit;
+  inline-size: inherit;
 }
+
 tr td.smiley {
   text-align: center;
 }
+
 img.emote {
-  width: 24px;
-  height: 24px;
+  inline-size: 24px;
+  block-size: 24px;
 }
+
 #smilepic,
 #smilepic option,
 select.emote,
@@ -25,10 +31,18 @@ select.emote option {
   background-repeat: no-repeat;
   background-position: 4% 50%;
   background-size: 24px;
-  padding: 1px 1px 1px 30px;
+  padding-block-start: 1px;
+  padding-block-end: 1px;
+  padding-inline-start: 30px;
+  padding-inline-end: 1px;
   color: #444;
-  height: 26px;
+  block-size: 26px;
+
+  [dir='rtl'] & {
+    background-position-x: calc(96%);
+  }
 }
+
 option[selected='selected'] {
   background-color: #e2dfca !important;
 }
