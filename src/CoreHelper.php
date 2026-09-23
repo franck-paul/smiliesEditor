@@ -258,7 +258,6 @@ class CoreHelper
 
         $zip_root_dir = $unzip->getRootDir();
 
-        $define = '';
         $target = dirname($zip_file);
         if ($zip_root_dir !== false) {
             $define     = $zip_root_dir . '/' . $this->smilies_file_name;

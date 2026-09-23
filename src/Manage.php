@@ -140,7 +140,6 @@ class Manage
 
         if (!empty($_FILES['upfile'])) {
             try {
-                $file = null;
                 /**
                  * @var array{name: string, type: string, size: int, tmp_name: string, error?: int, full_path: string}  $upfile
                  */
@@ -400,13 +399,13 @@ class Manage
 
         // Create array of used smilies filename
         $smileys_list = [];
-        foreach ($smilies as $k => $v) {
+        foreach ($smilies as $v) {
             $smileys_list = array_merge($smileys_list, [$v['name'] => $v['name']]);
         }
 
         // Create the combo of all images available in directory
         $smileys_combo = [];
-        foreach ($coreHelper->images_list as $k => $v) {
+        foreach ($coreHelper->images_list as $v) {
             $smileys_combo = array_merge($smileys_combo, [$v['name'] => $v['name']]);
         }
 
