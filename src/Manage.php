@@ -357,7 +357,7 @@ class Manage
 
         $settings = My::settings();
         $theme    = App::blog()->settings()->get('system')->getStr('theme', false);
-        $ordering = App::auth()->isSuperAdmin() && !in_array($theme, explode(',', (string) App::config()->distributedThemes()));
+        $ordering = App::auth()->isSuperAdmin() && !in_array($theme, explode(',', App::config()->distributedThemes()));
 
         // Init
         $smg_writable = false;
@@ -683,7 +683,7 @@ class Manage
                                         ->items([
                                             (new File('upfile'))
                                                 ->size(20)
-                                                ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size((int) App::config()->maxUploadSize())) . ')', Label::OL_TF)),
+                                                ->label(new Label(__('Choose a file:') . ' (' . sprintf(__('Maximum size %s'), Files::size(App::config()->maxUploadSize())) . ')', Label::OL_TF)),
                                         ]),
                                     (new Para())
                                         ->class('form-buttons')

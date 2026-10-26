@@ -39,7 +39,7 @@ class Install
         try {
             $old_version = App::version()->getVersion(My::id());
             // Rename settings namespace
-            if (version_compare((string) $old_version, '2.0', '<') && App::blog()->settings()->exists('smilieseditor')) {
+            if (version_compare($old_version, '2.0', '<') && App::blog()->settings()->exists('smilieseditor')) {
                 App::blog()->settings()->delWorkspace(My::id());
                 App::blog()->settings()->renWorkspace('smilieseditor', My::id());
             }
