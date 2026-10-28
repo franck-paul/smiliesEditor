@@ -95,7 +95,7 @@ class CoreHelper
                         $this->smilies_list[] = [
                             'code'       => $m[1],
                             'name'       => $m[2],
-                            'onSmilebar' => in_array($m[1], $this->smilies_config)];
+                            'onSmilebar' => in_array($m[1], $this->smilies_config, true)];
                     }
                 }
             }

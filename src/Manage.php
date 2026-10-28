@@ -357,7 +357,7 @@ class Manage
 
         $settings = My::settings();
         $theme    = App::blog()->settings()->get('system')->getStr('theme', false);
-        $ordering = App::auth()->isSuperAdmin() && !in_array($theme, explode(',', App::config()->distributedThemes()));
+        $ordering = App::auth()->isSuperAdmin() && !in_array($theme, explode(',', App::config()->distributedThemes()), true);
 
         // Init
         $smg_writable = false;
